@@ -36,7 +36,7 @@ export default function Home() {
               <div className="w-px bg-white/10" />
               <div className="flex flex-col items-end">
                 <span className="text-white/20 mb-1 group-hover:text-white/40">PATTERN_REGISTRY</span>
-                <span className="text-3xl font-bold text-white tracking-tighter">620</span>
+                <span className="text-3xl font-bold text-white tracking-tighter">1,250</span>
               </div>
             </div>
           </div>
@@ -81,7 +81,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Atlas Data Grid - REMOVED OUTER BORDER */}
+        {/* Atlas Data Grid */}
         <div className="flex-1 w-full mt-4">
            <AtlasGrid searchQuery={searchQuery} activeCategory={activeCategory} />
         </div>
