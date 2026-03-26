@@ -14,6 +14,7 @@ const config: Config = {
       colors: {
         black: '#000000',
         white: '#ffffff',
+        'ltl-grey': '#b2b2b2',
       },
       animation: {
         'fade-in': 'fadeIn 0.3s ease-in-out',

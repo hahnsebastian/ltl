@@ -29,9 +29,9 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
 
   if (filteredData.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-[400px] w-full text-white/10 p-8 border border-dashed border-white/5">
-        <span className="text-xl mb-2 tracking-widest">ZERO_RESULTS</span>
-        <span className="text-xs opacity-50">ADJUST_QUERY</span>
+      <div className="flex flex-col items-center justify-center h-[400px] w-full text-ltl-grey/10 p-8 border border-dashed border-white/5">
+        <span className="text-xl mb-2 tracking-widest uppercase">ZERO_RESULTS</span>
+        <span className="text-xs opacity-50 uppercase">ADJUST_QUERY</span>
       </div>
     )
   }
@@ -39,12 +39,12 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
   return (
     <div className="w-full flex flex-col bg-black overflow-hidden select-none">
       {/* Table Header */}
-      <div className="h-10 border-b border-white z-20 flex text-[9px] font-bold tracking-[0.2em] text-white/30 uppercase sticky top-0 bg-black">
+      <div className="h-10 border-b border-white z-20 flex text-[9px] font-bold tracking-[0.2em] text-ltl-grey uppercase sticky top-0 bg-black">
         <div className="grid grid-cols-[1.5fr_2fr_120px_100px_80px] w-full h-full items-center">
           <div className="px-4 border-r border-white/5 h-full flex items-center">LTL_COMMAND</div>
           <div className="px-4 border-r border-white/5 h-full flex items-center">INSTRUCTION_SET</div>
           <div className="px-4 border-r border-white/5 h-full flex items-center text-right justify-end">TOK_SAVED</div>
-          <div className="px-4 border-r border-white/5 h-full flex items-center text-right justify-end">EFFICIENCY</div>
+          <div className="px-4 border-r border-white/5 h-full flex items-center text-right justify-end">EFF_RATIO</div>
           <div className="px-4 h-full flex items-center text-right justify-end">ACTION</div>
         </div>
       </div>
@@ -57,7 +57,7 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
               
               {/* Command */}
               <div className="px-4 py-3 font-mono flex items-center border-r border-white/5 whitespace-nowrap overflow-hidden">
-                <span className="text-white/10 mr-2">LTL</span>
+                <span className="text-ltl-grey/20 mr-2">LTL</span>
                 <span className="text-blue-400/80">{item.scope}</span>
                 <span className="mx-1 text-red-400/80">{item.action}</span>
                 <span className="text-green-400/80">{item.persona}</span>
@@ -65,20 +65,20 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
                 <span className="text-purple-400/80">{item.output}</span>
               </div>
 
-              {/* Instruction - LIGHTER GREY */}
-              <div className="px-4 py-3 text-white/20 leading-relaxed border-r border-white/5 flex items-center italic overflow-hidden">
+              {/* Instruction - COLOR: #b2b2b2 (low-contrast) */}
+              <div className="px-4 py-3 text-ltl-grey/40 leading-relaxed border-r border-white/5 flex items-center italic overflow-hidden">
                 <span className="truncate">{item.fullInstruction}</span>
               </div>
 
               {/* Tokens */}
               <div className="px-4 py-3 text-right flex items-center justify-end font-mono border-r border-white/5">
-                <span className="line-through mr-2 opacity-[0.05] text-[9px]">{item.standardTokens}</span>
+                <span className="line-through mr-2 text-ltl-grey/15 text-[9px]">{item.standardTokens}</span>
                 <span className="text-white/80 font-bold">{item.ltlTokens}</span>
               </div>
 
               {/* Efficiency */}
               <div className="px-4 py-3 text-right flex items-center justify-end border-r border-white/5">
-                <span className="text-white/40 font-medium tracking-tighter">
+                <span className="text-ltl-grey/60 font-medium tracking-tighter">
                   {item.efficiency}%
                 </span>
               </div>
@@ -99,9 +99,9 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
       </div>
 
       {/* Simple Status */}
-      <div className="h-6 flex justify-between items-center px-4 text-[7px] text-white/10 tracking-[0.25em] font-mono select-none">
-        <div>DB_IDX: {LTL_DATABASE.length} // FILTERED: {filteredData.length}</div>
-        <div className="animate-pulse opacity-50 uppercase">SYSTEM_STABLE</div>
+      <div className="h-6 flex justify-between items-center px-4 text-[7px] text-ltl-grey/15 tracking-[0.25em] font-mono select-none">
+        <div>DB_IDX_v1.1: {LTL_DATABASE.length} // FILTERED: {filteredData.length}</div>
+        <div className="animate-pulse opacity-50 uppercase">STABLE</div>
       </div>
     </div>
   )
