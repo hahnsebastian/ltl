@@ -11,11 +11,8 @@ export default function Navbar() {
       <div className="max-w-screen-2xl mx-auto px-4 flex items-center justify-between h-12">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 hover:no-underline group h-8">
-          <img src="/logo.png" alt="LTL Logo" className="h-full object-contain filter invert" />
-          <span className="text-xs font-bold tracking-widest border border-white px-2 py-0.5 group-hover:bg-white group-hover:text-black transition-colors duration-150">
-            LTL
-          </span>
-          <span className="text-xs tracking-widest uppercase text-white/60 hidden sm:inline">
+          <img src="/logo.png" alt="LTL Logo" className="h-[24px] object-contain filter invert" />
+          <span className="text-xs tracking-widest uppercase text-white font-bold ml-1 hidden sm:inline">
             Less-Token-Language
           </span>
           <span className="text-xs text-white/30 hidden md:inline">v1.0</span>
@@ -34,7 +31,7 @@ export default function Navbar() {
               href={link.href}
               target={link.external ? '_blank' : undefined}
               rel={link.external ? 'noopener noreferrer' : undefined}
-              className="px-4 h-12 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/5 transition-colors border-r border-white/10 last:border-r-0"
+              className="px-4 h-12 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/5 transition-colors border-r border-white/10 last:border-r-0 font-bold"
             >
               {link.label}
             </Link>
