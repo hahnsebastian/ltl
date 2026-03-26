@@ -55,14 +55,14 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
           <div key={item.id} className="border-b border-white/10 hover:bg-white/5 transition-colors group">
             <div className="grid grid-cols-[1.5fr_2fr_120px_100px_80px] gap-4 px-4 py-4 min-h-[64px] items-center text-xs">
               
-              {/* Command */}
+              {/* Command - COLORS ADDED HERE */}
               <div className="font-bold font-mono">
                 <span className="text-white/40">LTL</span>{' '}
-                <span className="text-white">{item.scope}</span>{' '}
-                <span className="text-white">{item.action}</span>{' '}
-                <span className="text-white">{item.persona}</span>{' '}
-                <span className="text-white">{item.constraint}</span>{' '}
-                <span className="text-white">{item.output}</span>
+                <span className="text-blue-400">{item.scope}</span>{' '}
+                <span className="text-red-400">{item.action}</span>{' '}
+                <span className="text-green-400">{item.persona}</span>{' '}
+                <span className="text-yellow-400">{item.constraint}</span>{' '}
+                <span className="text-purple-400">{item.output}</span>
               </div>
 
               {/* Instruction */}

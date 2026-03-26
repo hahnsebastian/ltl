@@ -10,7 +10,8 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-black border-b border-white">
       <div className="max-w-screen-2xl mx-auto px-4 flex items-center justify-between h-12">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 hover:no-underline group">
+        <Link href="/" className="flex items-center gap-3 hover:no-underline group h-8">
+          <img src="/logo.png" alt="LTL Logo" className="h-full object-contain filter invert" />
           <span className="text-xs font-bold tracking-widest border border-white px-2 py-0.5 group-hover:bg-white group-hover:text-black transition-colors duration-150">
             LTL
           </span>
@@ -21,7 +22,7 @@ export default function Navbar() {
         </Link>
 
         {/* Nav links */}
-        <div className="hidden md:flex items-center text-xs tracking-wider">
+        <div className="hidden md:flex items-center text-xs tracking-wider h-full">
           {[
             { href: '/', label: 'ATLAS' },
             { href: '/whitepaper', label: 'WHITE PAPER' },
@@ -33,7 +34,7 @@ export default function Navbar() {
               href={link.href}
               target={link.external ? '_blank' : undefined}
               rel={link.external ? 'noopener noreferrer' : undefined}
-              className="px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 transition-colors border-r border-white/10 last:border-r-0"
+              className="px-4 h-12 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/5 transition-colors border-r border-white/10 last:border-r-0"
             >
               {link.label}
             </Link>
