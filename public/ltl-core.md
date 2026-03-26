@@ -1,6 +1,6 @@
 # LESS TOKEN LANGUAGE (LTL)
-[Version: 1.2.0]
-[Status: Global Registry v1.2 Release]
+[Version: 1.0.0]
+[Status: Global Registry v1.0 Release]
 
 ## MISSION
 LTL is a deterministic semantic compression standard for AI prompting.
