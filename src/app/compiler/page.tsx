@@ -130,7 +130,7 @@ export default function PromptCompiler() {
                 ) : isCompiling ? (
                   <div className="flex flex-col items-center gap-4">
                      <div className="w-12 h-1 border border-white/10 overflow-hidden relative">
-                        <div className="absolute inset-0 bg-white translate-x-[-100%] animate-[slide_1.5s_infinite_linear]" />
+                        <div className="absolute inset-0 bg-white translate-x-[-100%] animate-compiler-slide" />
                      </div>
                      <span className="text-[9px] text-ltl-grey/30 uppercase tracking-widest animate-pulse">Encoding Vectors</span>
                   </div>
@@ -157,13 +157,6 @@ export default function PromptCompiler() {
                   </div>
                 )}
             </div>
-
-            <style jsx>{`
-               @keyframes slide {
-                 0% { transform: translateX(-100%); }
-                 100% { transform: translateX(100%); }
-               }
-            `}</style>
           </div>
         </div>
 
