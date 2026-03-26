@@ -156,7 +156,7 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
 
       {/* Simple Status */}
       <div className="h-6 flex justify-between items-center px-4 text-[7px] text-ltl-grey/40 tracking-[0.25em] font-mono select-none bg-black border-t border-white/5">
-        <div>REGISTRY_v1.2: {database.length} // ALL_RECORDS_ACTIVE: {filteredData.length} // LATENCY: 0.2ms</div>
+        <div>REGISTRY_v1.2: {database.length} {'//'} ALL_RECORDS_ACTIVE: {filteredData.length} {'//'} LATENCY: 0.2ms</div>
         <div className="animate-pulse opacity-50 uppercase">VIRTUALIZATION_STABLE</div>
       </div>
     </div>
