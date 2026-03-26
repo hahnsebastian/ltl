@@ -65,7 +65,7 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
                 <span className="text-purple-400/80">{item.output}</span>
               </div>
 
-              {/* Instruction */}
+              {/* Instruction - COLOR: #b2b2b2 (low-contrast) */}
               <div className="px-4 py-3 text-ltl-grey/40 leading-relaxed border-r border-white/5 flex items-center italic overflow-hidden">
                 <span className="truncate">{item.fullInstruction}</span>
               </div>
@@ -100,7 +100,7 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
 
       {/* Simple Status */}
       <div className="h-6 flex justify-between items-center px-4 text-[7px] text-ltl-grey/15 tracking-[0.25em] font-mono select-none">
-        <div>DB_IDX_v1.0: {LTL_DATABASE.length} {'//'} FILTERED: {filteredData.length}</div>
+        <div>DB_IDX_v1.1: {LTL_DATABASE.length} // FILTERED: {filteredData.length}</div>
         <div className="animate-pulse opacity-50 uppercase">STABLE</div>
       </div>
     </div>

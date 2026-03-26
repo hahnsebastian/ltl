@@ -19,7 +19,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 z-10 relative">
             <div className="max-w-3xl">
               <h1 className="text-4xl md:text-6xl font-bold tracking-tighter mb-4 uppercase">
-                LTL ATLAS <span className="text-ltl-grey/20 text-xl font-normal lowercase tracking-widest">v1.0</span>
+                LTL ATLAS <span className="text-ltl-grey/20 text-xl font-normal lowercase tracking-widest">v1.2</span>
               </h1>
               <p className="text-xs md:text-sm text-ltl-grey/60 max-w-2xl leading-relaxed italic border-l border-white/5 pl-4">
                 The global registry and technical specification for Less-Token-Language.
