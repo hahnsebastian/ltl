@@ -1,4 +1,6 @@
-import { useMemo } from 'react'
+'use client'
+
+import { useMemo, useState, useEffect } from 'react'
 import Fuse from 'fuse.js'
 import { LTL_DATABASE } from '@/lib/ltl-data'
 
@@ -8,6 +10,9 @@ interface AtlasGridProps {
 }
 
 export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProps) {
+  // Optimization: Lazy rendering for performance with 5,000 items
+  const [visibleCount, setVisibleCount] = useState(50)
+
   const fuse = useMemo(() => new Fuse(LTL_DATABASE, {
     keys: ['command', 'fullInstruction', 'category', 'scope', 'action', 'persona'],
     threshold: 0.3,
@@ -26,6 +31,13 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
 
     return result
   }, [searchQuery, activeCategory, fuse])
+
+  // Reset visible count when filters change to maintain snappy feel
+  useEffect(() => {
+    setVisibleCount(50)
+  }, [searchQuery, activeCategory])
+
+  const paginatedData = useMemo(() => filteredData.slice(0, visibleCount), [filteredData, visibleCount])
 
   if (filteredData.length === 0) {
     return (
@@ -49,12 +61,11 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
         </div>
       </div>
 
-      {/* Table Body */}
-      <div className="max-h-[75vh] overflow-y-auto scrollbar-hide">
-        {filteredData.map((item) => (
+      {/* Table Body - Infinite Scroll Logic */}
+      <div className="max-h-[75vh] overflow-y-auto scrollbar-hide pb-20">
+        {paginatedData.map((item) => (
           <div key={item.id} className="border-b border-white/[0.03] hover:bg-white/[0.01] transition-colors group">
             <div className="grid grid-cols-[1.5fr_2fr_120px_100px_80px] w-full min-h-[52px] items-stretch text-[11px]">
-              
               {/* Command */}
               <div className="px-4 py-3 font-mono flex items-center border-r border-white/5 whitespace-nowrap overflow-hidden">
                 <span className="text-ltl-grey/20 mr-2">LTL</span>
@@ -64,25 +75,21 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
                 <span className="mx-1 text-yellow-400/80">{item.constraint}</span>
                 <span className="text-purple-400/80">{item.output}</span>
               </div>
-
-              {/* Instruction - COLOR: #b2b2b2 (low-contrast) */}
+              {/* Instruction */}
               <div className="px-4 py-3 text-ltl-grey/40 leading-relaxed border-r border-white/5 flex items-center italic overflow-hidden">
                 <span className="truncate">{item.fullInstruction}</span>
               </div>
-
               {/* Tokens */}
               <div className="px-4 py-3 text-right flex items-center justify-end font-mono border-r border-white/5">
                 <span className="line-through mr-2 text-ltl-grey/15 text-[9px]">{item.standardTokens}</span>
                 <span className="text-white/80 font-bold">{item.ltlTokens}</span>
               </div>
-
               {/* Efficiency */}
               <div className="px-4 py-3 text-right flex items-center justify-end border-r border-white/5">
                 <span className="text-ltl-grey/60 font-medium tracking-tighter">
                   {item.efficiency}%
                 </span>
               </div>
-              
               {/* Action */}
               <div className="px-4 py-3 text-right flex items-center justify-end">
                 <button 
@@ -92,16 +99,27 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
                   COPY
                 </button>
               </div>
-
             </div>
           </div>
         ))}
+
+        {/* Load More Trigger */}
+        {visibleCount < filteredData.length && (
+          <div className="p-8 flex justify-center border-t border-white/5">
+            <button 
+              onClick={() => setVisibleCount(prev => prev + 100)}
+              className="px-6 py-2 border border-white/20 text-[10px] tracking-widest hover:bg-white hover:text-black transition-all font-bold uppercase"
+            >
+              LOAD_MORE_RECORDS [{filteredData.length - visibleCount} REMAINING]
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Simple Status */}
-      <div className="h-6 flex justify-between items-center px-4 text-[7px] text-ltl-grey/15 tracking-[0.25em] font-mono select-none">
-        <div>DB_IDX_v1.1: {LTL_DATABASE.length} // FILTERED: {filteredData.length}</div>
-        <div className="animate-pulse opacity-50 uppercase">STABLE</div>
+      <div className="h-6 flex justify-between items-center px-4 text-[7px] text-ltl-grey/15 tracking-[0.25em] font-mono select-none bg-black">
+        <div>DB_IDX_v1.2: {LTL_DATABASE.length} // VISIBLE: {paginatedData.length} // FILTERED: {filteredData.length}</div>
+        <div className="animate-pulse opacity-50 uppercase">PERFORMANCE_STABLE</div>
       </div>
     </div>
   )
