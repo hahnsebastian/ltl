@@ -20,7 +20,6 @@ const config: Config = {
         'fade-in': 'fadeIn 0.3s ease-in-out',
         'slide-up': 'slideUp 0.25s ease-out',
         'pulse-border': 'pulseBorder 2s infinite',
-        'compiler-slide': 'slide 1.5s infinite linear',
       },
       keyframes: {
         fadeIn: {
@@ -34,10 +33,6 @@ const config: Config = {
         pulseBorder: {
           '0%, 100%': { borderColor: '#ffffff' },
           '50%': { borderColor: '#555555' },
-        },
-        slide: {
-          '0%': { transform: 'translateX(-100%)' },
-          '100%': { transform: 'translateX(100%)' },
         },
       },
     },

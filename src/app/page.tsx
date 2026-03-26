@@ -1,12 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import dynamic from 'next/dynamic'
 import Navbar from '@/components/Navbar'
+import AtlasGrid from '@/components/AtlasGrid'
 import { CATEGORIES } from '@/lib/ltl-data'
-
-// Load AtlasGrid with SSR disabled to prevent react-window errors during build
-const AtlasGrid = dynamic(() => import('@/components/AtlasGrid'), { ssr: false })
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('')

@@ -1,5 +1,5 @@
 # LESS TOKEN LANGUAGE (LTL)
-[Version: 1.2.1]
+[Version: 1.2.0]
 [Status: Core Spec — PROD READY]
 
 ## MISSION
@@ -29,7 +29,6 @@ to the following ruleset. DO NOT invent commands outside the defined dictionarie
 - !trace= Trace Flow. Map execution paths across microservice or module boundaries.
 - !orbit-calc= SpaceX/Aero. Calculate orbital mechanics, telemetry, and payload vectors.
 - !bio-seq= BioTech. Audit/Synthesize biological sequences or protein folding logic.
-- !gen = Generate. Produce new content, logic, or assets based on specified patterns.
 
 ## DICTIONARY: [PERSONAS%]
 - %SNR = Senior Developer. Values maintainability, legibility, and robustness.
@@ -40,7 +39,6 @@ to the following ruleset. DO NOT invent commands outside the defined dictionarie
 - %SPACE= Aerospace Engineer. High-precision telemetry and fail-safe systems.
 - %BIO = Bioinformatician. Complex sequence analysis and domain validation.
 - %CISO = Executive Security. Regulatory compliance, risk assessment, and strategy.
-- %SCOUT= Technical Scout. Analytical, qualitative focus. Habits over statistics.
 
 ## DICTIONARY: [CONSTRAINTS#]
 - #dry = Don't Repeat Yourself.
@@ -50,9 +48,6 @@ to the following ruleset. DO NOT invent commands outside the defined dictionarie
 - #low-latency= Optimize for real-time responsiveness.
 - #rad-hard= Aerospace. Design for radiation-hardened or high-failure environments.
 - #ha = High Availability. No single point of failure (NSPF).
-- #narrative = Write in a descriptive, narrative style. No bullet points or lists.
-- #no-stats = Strictly exclude numerical metrics, raw data, and statistical figures.
-- #qualitative = Focus on qualitative observations: habits, tendencies, and behaviors.
 
 ## DICTIONARY: [OUTPUTS>]
 - >ts = Strict TypeScript. No `any`. Full generics.

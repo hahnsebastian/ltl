@@ -22,8 +22,8 @@ export default function Navbar() {
         <div className="hidden md:flex items-center text-xs tracking-wider h-full">
           {[
             { href: '/', label: 'ATLAS' },
-            { href: '/compiler', label: 'EDIT PROMPT' },
             { href: '/whitepaper', label: 'WHITE PAPER' },
+            { href: '/transform', label: 'TRANSFORM' },
             { href: '/ltl-core.md', label: 'LTL CORE' },
             { href: 'https://github.com/hahnsebastian/ltl', label: 'GITHUB', external: true },
           ].map(link => (
@@ -54,8 +54,8 @@ export default function Navbar() {
         <div className="md:hidden border-t border-white bg-black">
           {[
             { href: '/', label: 'ATLAS' },
-            { href: '/compiler', label: 'EDIT PROMPT' },
             { href: '/whitepaper', label: 'WHITE PAPER' },
+            { href: '/transform', label: 'TRANSFORM' },
             { href: '/ltl-core.md', label: 'LTL CORE' },
             { href: 'https://github.com/hahnsebastian/ltl', label: 'GITHUB' },
           ].map(link => (
