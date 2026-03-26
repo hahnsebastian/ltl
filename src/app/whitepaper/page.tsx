@@ -34,7 +34,7 @@ export default function WhitePaper() {
           <p>
             The fundamental bottleneck in modern LLM interaction is not compute latency, but <strong>Context Window Saturation</strong> and <strong>Token Input Costs</strong>. 
             As developers build more complex agentic systems, the sheer volume of instructions required to maintain rigorous engineering standards 
-            consumes significant context budget—often degrading model recall (the "needle in a haystack" problem) while increasing API expenditure.
+            consumes significant context budget—often degrading model recall (the &quot;needle in a haystack&quot; problem) while increasing API expenditure.
           </p>
           <p>
             <strong>Less-Token-Language (LTL)</strong> proposes a deterministic semantic compression standard for AI prompting. 
@@ -92,7 +92,7 @@ with code blocks."`}
             to the system prompt <strong>once</strong> and cached. 
           </p>
           <p>
-            All subsequent interactions leverage the cached instructions via brief LTL symbols. This reduces continuous token expenditure by ~94% and improves the model's focus on the actual task codebase rather than redundant behavioral instructions.
+            All subsequent interactions leverage the cached instructions via brief LTL symbols. This reduces continuous token expenditure by ~94% and improves the model&apos;s focus on the actual task codebase rather than redundant behavioral instructions.
           </p>
         </section>
 

@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState } from 'react'
 
 export default function Navbar() {
@@ -10,12 +11,19 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-black border-b border-white">
       <div className="max-w-screen-2xl mx-auto px-4 flex items-center justify-between h-12">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 hover:no-underline group h-8">
-          <img src="/logo.png" alt="LTL Logo" className="h-[24px] object-contain filter invert" />
+        <Link href="/" className="flex items-center gap-3 hover:no-underline group h-[24px]">
+          <Image 
+            src="/logo.png" 
+            alt="LTL Logo" 
+            width={24} 
+            height={24} 
+            priority
+            className="h-full w-auto object-contain filter invert" 
+          />
           <span className="text-xs tracking-widest uppercase text-white font-bold ml-1 hidden sm:inline">
             Less-Token-Language
           </span>
-          <span className="text-xs text-white/30 hidden md:inline">v1.0</span>
+          <span className="text-xs text-white/30 hidden md:inline">v1.2</span>
         </Link>
 
         {/* Nav links */}
