@@ -19,7 +19,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 z-10 relative">
             <div className="max-w-3xl">
               <h1 className="text-4xl md:text-6xl font-bold tracking-tighter mb-4 uppercase">
-                LTL ATLAS <span className="text-ltl-grey/30 text-xl font-normal lowercase tracking-widest">v1.5.1</span>
+                LTL ATLAS <span className="text-ltl-grey/30 text-xl font-normal lowercase tracking-widest">v1.7.0</span>
               </h1>
               
               {/* Description - HIGH READABILITY SOLID GREY */}
@@ -38,7 +38,7 @@ export default function Home() {
               <div className="w-px bg-white/10" />
               <div className="flex flex-col items-end">
                 <span className="text-ltl-grey/50 mb-1 group-hover:text-ltl-grey/80 transition-colors">PATTERN_REGISTRY</span>
-                <span className="text-3xl font-bold text-white tracking-tighter">80,000</span>
+                <span className="text-3xl font-bold text-white tracking-tighter">200,000</span>
               </div>
             </div>
           </div>

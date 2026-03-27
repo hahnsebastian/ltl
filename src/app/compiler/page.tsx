@@ -5,85 +5,179 @@ import Navbar from '@/components/Navbar'
 
 export default function LTLCompiler() {
   const [input, setInput] = useState('')
+  const [copiedSuccess, setCopiedSuccess] = useState(false)
 
   const ltlResult = useMemo(() => {
     if (!input.trim()) return null
 
-    const t = input.toLowerCase()
-    
-    // 1. Derive Scope
-    let scope: string | null = null
-    if (t.includes('terminal') || t.includes('shell')) scope = '@terminal'
-    else if (t.includes('browser')) scope = '@browser'
-    else if (t.includes('excel') || t.includes('sheet')) scope = '@excel'
-    else if (t.includes('javascript') || t.includes('console')) scope = '@javascript'
-    else if (t.includes('python')) scope = '@python'
-    else if (t.includes('sql') || t.includes('database')) scope = '@sql'
-    else if (t.includes('react')) scope = '@react'
-    else if (t.includes('solidity') || t.includes('blockchain') || t.includes('ethereum')) scope = '@eth'
-    else if (t.includes('unity')) scope = '@unity'
-    else if (t.includes('linux')) scope = '@linux'
-    else if (t.includes('docker') || t.includes('container')) scope = '@docker'
-    else if (t.includes('test') || t.includes('/tests')) scope = '@tests'
-    else if (t.includes('api') || t.includes('/api')) scope = '@api'
-    else if (t.includes('ui') || t.includes('/components')) scope = '@ui'
-    else if (t.includes('scout') || t.includes('player')) scope = '@player'
+    let workingText = input.toLowerCase()
+    const ltlChain: string[] = []
+    const usedWords = new Set<string>()
 
-    // 2. Derive Action
-    let action: string | null = null
-    if (t.includes('scout') || t.includes('player report') || t.includes('scouting report')) action = '!scout'
-    else if (t.includes('refactor') || t.includes('clean') || t.includes('rewrite')) action = '!ref'
-    else if (t.includes('security') || t.includes('audit') || t.includes('vulnerability')) action = '!sec'
-    else if (t.includes('optimize') || t.includes('performance') || t.includes('faster')) action = '!opt'
-    else if (t.includes('test') || t.includes('coverage')) action = '!test'
-    else if (t.includes('summarize')) action = '!summarize'
-    else if (t.includes('extract')) action = '!extract'
-    else if (t.includes('translate')) action = '!translate'
-    else if (t.includes('reason') || t.includes('step-by-step')) action = '!reason'
-    else if (t.includes('agent') || t.includes('loop')) action = '!react'
-    else if (t.includes('document')) action = '!doc'
+    // Stopwords to remove from residual context for MAXIMUM compression
+    const stopwords = new Set(['a', 'an', 'the', 'is', 'are', 'was', 'were', 'to', 'for', 'of', 'and', 'or', 'with', 'by', 'at', 'from', 'as', 'please', 'can', 'you', 'my', 'your', 'i', 'the', 'this', 'that', 'it', 'some', 'any', 'all', 'must', 'should', 'would', 'exact', 'maintain', 'following', 'shows', 'below', 'include', 'instead', 'writing', 'describing', 'focusing', 'existing', 'professional', 'traditionals', 'matches', 'observed', 'games', ' Tendencies', ' Habits', ' Strengths', ' Weaknesses', ' Matches', ' Match', ' MATCH', ' MATCHES']);
 
-    // 3. Derive Persona
-    let persona: string | null = null
-    if (t.includes('scout')) persona = '%SCOUT'
-    else if (t.includes('security') || t.includes('hacker') || t.includes('pentest')) persona = '%SEC'
-    else if (t.includes('architect') || t.includes('structure')) persona = '%ARC'
-    else if (t.includes('ml') || t.includes('intelligence') || t.includes('llm')) persona = '%ML'
-    else if (t.includes('data') || t.includes('analytics')) persona = '%DATA'
-    else if (t.includes('ux') || t.includes('design')) persona = '%UX'
-    else if (t.includes('sre') || t.includes('infra') || t.includes('ops')) persona = '%SRE'
-    else if (t.includes('academic') || t.includes('tutor') || t.includes('teacher')) persona = '%TUTOR'
-    else if (t.includes('senior') || t.includes('expert') || t.includes('dev')) persona = '%SNR'
+    // Common term shorthands for Context Minification
+    const contextualShorthands: Record<string, string> = {
+      'refactor': 'ref', 'security': 'sec', 'documentation': 'doc', 'optimization': 'opt', 'testing': 'test',
+      'summarize': 'sum', 'analytical': 'analyt', 'professional': 'pro', 'narrative': 'narr',
+      'performance': 'perf', 'tendencies': 'tend', 'habits': 'hab', 'strengths': 'str', 'weaknesses': 'weak',
+      'scouting': 'scout', 'player': 'plr', 'context': 'ctx', 'attacking': 'atk', 'defending': 'def',
+      'conclusion': 'conc', 'grade': 'grd', 'headings': 'hdgs', 'match': 'mtch', 'matches': 'mtch'
+    };
 
-    // 4. Derive Constraint
-    let constraint: string | null = null
-    if (t.includes('scout') || t.includes('narrative')) constraint = '#narrative'
-    else if (t.includes('concise') || t.includes('no explain') || t.includes('short')) constraint = '#min'
-    else if (t.includes('creative') || t.includes('elegant') || t.includes('beautiful')) constraint = '#creative'
-    else if (t.includes('professional') || t.includes('rigorous') || t.includes('standard')) constraint = '#professional'
-    else if (t.includes('dry') || t.includes('duplicate')) constraint = '#dry'
-    else if (t.includes('high availability') || t.includes('uptime')) constraint = '#ha'
-    else if (t.includes('performant') || t.includes('latency')) constraint = '#perf'
-    else if (t.includes('standard') || t.includes('default')) constraint = '#std'
+    // Keyword dictionary (v2.0.0 Expanded)
+    const keywords = {
+      scopes: [
+        { key: '@logs', matches: ['logs', 'telemetry', 'observability', 'error log', 'trace'] },
+        { key: '@next', matches: ['next.js', 'nextjs', 'pages router', 'app router', 'ssr', 'ssg'] },
+        { key: '@edge', matches: ['edge', 'lambda@edge', 'cloudflare worker', 'iot', 'gateway'] },
+        { key: '@llm', matches: ['llm', 'prompt', 'training', 'inference', 'embedding', 'rag'] },
+        { key: '@terminal', matches: ['terminal', 'shell', 'bash', 'zsh', 'cli'] },
+        { key: '@browser', matches: ['browser', 'chrome', 'safari', 'firefox', 'web view'] },
+        { key: '@excel', matches: ['excel', 'sheet', 'csv', 'table', 'spreadsheet'] },
+        { key: '@javascript', matches: ['javascript', 'console', 'nodejs', 'npm', 'js'] },
+        { key: '@python', matches: ['python', 'pip', 'py', 'django', 'flask'] },
+        { key: '@sql', matches: ['sql', 'database', 'postgres', 'mysql', 'db', 'query'] },
+        { key: '@react', matches: ['react', 'component', 'hook', 'jsx', 'tsx'] },
+        { key: '@api', matches: ['api', 'endpoint', 'rest', 'graphql', 'grpc'] },
+        { key: '@ui', matches: ['ui', 'tailwind', 'css', 'design system'] },
+        { key: '@player', matches: ['scout', 'player', 'scouting', 'performance profile', 'football', 'soccer'] }
+      ],
+      actions: [
+        { key: '!bench', matches: ['benchmark', 'latency test', 'throughput', 'load test'] },
+        { key: '!debug', matches: ['debug', 'fix', 'trace', 'root cause', 'troubleshoot'] },
+        { key: '!audit', matches: ['audit', 'compliance', 'legal check', 'policy'] },
+        { key: '!migrate', matches: ['migrate', 'upgrade', 'transform code', 'port'] },
+        { key: '!scout', matches: ['scout', 'player report', 'scouting report', 'analytical report', 'grading'] },
+        { key: '!ref', matches: ['refactor', 'clean', 'rewrite', 'improve', 'dry'] },
+        { key: '!sec', matches: ['security', 'audit', 'vulnerability', 'owasp', 'penetration', 'pentest'] },
+        { key: '!opt', matches: ['optimize', 'performance', 'faster', 'latency', 'bottleneck'] },
+        { key: '!test', matches: ['test', 'coverage', 'unit', 'debugging'] },
+        { key: '!summarize', matches: ['summarize', 'summary', 'brief', 'overview'] },
+        { key: '!reason', matches: ['reason', 'step-by-step', 'thought', 'cot', 'logic'] },
+        { key: '!doc', matches: ['document', 'readme', 'api spec', 'commenting'] }
+      ],
+      personas: [
+        { key: '%CTO', matches: ['cto', 'strategic', 'leadership', 'vision', 'roadmap'] },
+        { key: '%SRE', matches: ['sre', 'reliability', 'on-call', 'uptime', 'infrastructure'] },
+        { key: '%LEGAL', matches: ['legal', 'lawyer', 'compliance officer', 'gdpr'] },
+        { key: '%SCOUT', matches: ['scout', 'analyst', 'football scout', 'performance monitor'] },
+        { key: '%SEC', matches: ['security', 'hacker', 'pentest', 'whitehat'] },
+        { key: '%ARC', matches: ['architect', 'system design', 'structural'] },
+        { key: '%ML', matches: ['ml', 'intelligence', 'llm', 'ai', 'data science'] },
+        { key: '%SNR', matches: ['senior', 'expert', 'lead', 'dev', 'professional'] }
+      ],
+      constraints: [
+        { key: '#strict', matches: ['strict', 'zero debt', 'no compromises', 'hard rule'] },
+        { key: '#ha', matches: ['high availability', 'failover', 'redundancy', 'uptime'] },
+        { key: '#idempotent', matches: ['idempotent', 'pure', 'stateless', 'side-effect free'] },
+        { key: '#narrative', matches: ['scouting', 'narrative', 'flowing', 'essay', 'paragraph'] },
+        { key: '#min', matches: ['concise', 'no explain', 'short', 'brief', 'minimal'] },
+        { key: '#safe', matches: ['safe', 'secure', 'fail-secure', 'sanitize'] },
+        { key: '#perf', matches: ['performant', 'latency', 'low level'] },
+        { key: '#std', matches: ['standard', 'default', 'regular'] }
+      ],
+      outputs: [
+        { key: '>raw', matches: ['raw', 'no formatting', 'plain text', 'txt'] },
+        { key: '>json', matches: ['json', 'object', 'api payload'] },
+        { key: '>ts', matches: ['typescript', '.ts', 'interface', 'type definition'] },
+        { key: '>sh', matches: ['sh', 'terminal output', 'bash script'] },
+        { key: '>csv', matches: ['csv', 'table', 'excel output'] },
+        { key: '>mermaid', matches: ['mermaid', 'diagram', 'flowchart'] },
+        { key: '>md', matches: ['markdown', 'summary', 'text', 'doc'] }
+      ]
+    }
 
-    // 5. Derive Output
-    let output: string | null = null
-    if (t.includes('json')) output = '>json'
-    else if (t.includes('typescript') || t.includes('.ts')) output = '>ts'
-    else if (t.includes('sh') || t.includes('terminal output')) output = '>sh'
-    else if (t.includes('csv') || t.includes('table')) output = '>csv'
-    else if (t.includes('python') || t.includes('.py')) output = '>py'
-    else if (t.includes('mermaid') || t.includes('diagram')) output = '>mermaid'
-    else if (t.includes('markdown') || t.includes('summary')) output = '>md'
+    // MULTI-PASS LTL EXTRACTION
+    let continueMatching = true
+    while (continueMatching) {
+      let currentScope = null; let currentAction = null; let currentPersona = null; let currentConstraint = null; let currentOutput = null
+      let matchedAny = false
+      for (const scopeObj of keywords.scopes) {
+        for (const m of scopeObj.matches) { if (workingText.includes(m)) {
+            currentScope = scopeObj.key
+            m.split(/\s+/).forEach(w => usedWords.add(w.toLowerCase().replace(/[^a-z0-9]/g, '')))
+            workingText = workingText.replace(m, ''); matchedAny = true; break
+      } } if (currentScope) break }
+      for (const actionObj of keywords.actions) {
+        for (const m of actionObj.matches) { if (workingText.includes(m)) {
+            currentAction = actionObj.key
+            m.split(/\s+/).forEach(w => usedWords.add(w.toLowerCase().replace(/[^a-z0-9]/g, '')))
+            workingText = workingText.replace(m, ''); matchedAny = true; break
+      } } if (currentAction) break }
+      for (const personaObj of keywords.personas) {
+        for (const m of personaObj.matches) { if (workingText.includes(m)) {
+            currentPersona = personaObj.key
+            m.split(/\s+/).forEach(w => usedWords.add(w.toLowerCase().replace(/[^a-z0-9]/g, '')))
+            workingText = workingText.replace(m, ''); matchedAny = true; break
+      } } if (currentPersona) break }
+      for (const constObj of keywords.constraints) {
+        for (const m of constObj.matches) { if (workingText.includes(m)) {
+            currentConstraint = constObj.key
+            m.split(/\s+/).forEach(w => usedWords.add(w.toLowerCase().replace(/[^a-z0-9]/g, '')))
+            workingText = workingText.replace(m, ''); matchedAny = true; break
+      } } if (currentConstraint) break }
+      for (const outObj of keywords.outputs) {
+        for (const m of outObj.matches) { if (workingText.includes(m)) {
+            currentOutput = outObj.key
+            m.split(/\s+/).forEach(w => usedWords.add(w.toLowerCase().replace(/[^a-z0-9]/g, '')))
+            workingText = workingText.replace(m, ''); matchedAny = true; break
+      } } if (currentOutput) break }
+      if (matchedAny) {
+        ltlChain.push(`LTL ${currentScope || '@agent'} ${currentAction || '!act'} ${currentPersona || '%SNR'} ${currentConstraint || '#std'} ${currentOutput || '>md'}`)
+      } else { continueMatching = false }
+      if (ltlChain.length > 5) break 
+    }
 
-    const allDefined = !!(scope && action && persona && constraint && output)
-    const command = `LTL ${scope || '[UNDEFINED]'} ${action || '[UNDEFINED]'} ${persona || '[UNDEFINED]'} ${constraint || '[UNDEFINED]'} ${output || '[UNDEFINED]'}`
+    // CONTEXT MINIFICATION (The Token Killer)
+    const originalWords = input.split(/(\s+)/)
+    const leftOverParts: string[] = []
+    const highlightedSource = originalWords.map((word, i) => {
+      const cleanWord = word.toLowerCase().replace(/[^a-z0-9]/g, '')
+      if (!cleanWord) return <span key={i}>{word}</span>
+      const isUsed = usedWords.has(cleanWord)
+      if (!isUsed) leftOverParts.push(word)
+      return (
+        <span key={i} className={isUsed ? 'text-white font-bold opacity-100 underline decoration-white/20' : 'text-red-500/60 line-through opacity-40'}>
+          {word}
+        </span>
+      )
+    })
+
+    const minifiedContext = leftOverParts
+      .join('')
+      .toLowerCase()
+      .split(/\s+/)
+      .filter(w => w.length > 1 && !stopwords.has(w)) // Strip stopwords & noise
+      .map(w => contextualShorthands[w] || w) // Use contextual shorthands
+      .join(' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+
+    const hasMinContext = minifiedContext.length > 0
+    const fullUnifiedChain = ltlChain.map((cmd) => {
+       return hasMinContext ? `${cmd} & ${minifiedContext}` : cmd
+    }).join('\n')
+
     const stTokens = Math.ceil(input.split(' ').length * 1.35)
-    const ltlTokens = 8
+    // ltlTokens calculation: commands (8 each) + minified context words
+    const ltlTokens = ltlChain.length * 8 + (hasMinContext ? (minifiedContext.split(' ').length) : 0)
     const efficiency = Math.round((1 - (ltlTokens / Math.max(ltlTokens, stTokens))) * 100 * 10) / 10
 
-    return { command, stTokens, ltlTokens, efficiency, scope, action, persona, constraint, output, allDefined }
+    return { 
+      fullUnifiedChain, 
+      stTokens, ltlTokens, efficiency, 
+      ltlChain, allDefined: ltlChain.length > 0, 
+      highlightedSource, hasMinContext, minifiedContext
+    }
   }, [input])
+
+  const copy = (text: string) => {
+    navigator.clipboard.writeText(text)
+    setCopiedSuccess(true)
+    setTimeout(() => setCopiedSuccess(false), 2000)
+  }
 
   return (
     <div className="min-h-screen bg-black text-white font-mono flex flex-col pt-12">
@@ -91,13 +185,19 @@ export default function LTLCompiler() {
 
       <main className="max-w-5xl mx-auto px-4 py-16 flex-1 w-full flex flex-col gap-12">
         <div className="border border-white/20 p-8 md:p-12 bg-[#050505] flex flex-col gap-8">
-          <div>
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tighter uppercase leading-none mb-4">
-              LTL_COMPILER <span className="text-ltl-grey/30 text-xl font-normal lowercase tracking-widest italic">v1.2</span>
-            </h1>
-            <p className="text-xs text-ltl-grey uppercase tracking-widest opacity-60">
-              Deterministic Semantic Transformer: English Prompt → LTL Shorthand
-            </p>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+              <h1 className="text-4xl md:text-6xl font-bold tracking-tighter uppercase leading-none mb-4">
+                LTL_COMPILER <span className="text-ltl-grey/30 text-xl font-normal lowercase tracking-widest italic">v2.1.0</span>
+              </h1>
+              <p className="text-xs text-ltl-grey uppercase tracking-widest opacity-60">
+                Token-Optimized Context Minification Engine
+              </p>
+            </div>
+            <div className="text-[10px] text-ltl-grey font-bold flex gap-4 uppercase tracking-[0.2em] border-l border-white/20 pl-4">
+              <span>ALGO: DELTA_COMPRESSION</span>
+              <span className="text-blue-400">STATUS: PROD</span>
+            </div>
           </div>
 
           <div className="flex flex-col gap-4">
@@ -111,73 +211,80 @@ export default function LTLCompiler() {
           </div>
 
           {ltlResult && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-8 border-t border-white/10 animate-in fade-in slide-in-from-top-4 duration-500">
-              <div className="flex flex-col gap-6">
-                <div className="flex flex-col gap-2">
-                   <label className="text-[10px] font-bold text-white uppercase tracking-[0.2em] opacity-40">OPTIMIZED_LTL_COMMAND</label>
-                   <div className="bg-white/5 border border-white/10 p-6 flex flex-col gap-4 group">
-                      <div className="text-xl md:text-2xl font-bold tracking-tight break-all leading-tight">
-                        <span className="text-ltl-grey/40">LTL</span>{' '}
-                        <span className={ltlResult.scope ? 'text-blue-400' : 'text-red-500 underline decoration-dotted'}>{ltlResult.scope || '[MISSING_SCOPE]'}</span>{' '}
-                        <span className={ltlResult.action ? 'text-red-400' : 'text-red-500 underline decoration-dotted'}>{ltlResult.action || '[MISSING_ACTION]'}</span>{' '}
-                        <span className={ltlResult.persona ? 'text-green-400' : 'text-red-500 underline decoration-dotted'}>{ltlResult.persona || '[MISSING_PERSONA]'}</span>{' '}
-                        <span className={ltlResult.constraint ? 'text-yellow-400' : 'text-red-500 underline decoration-dotted'}>{ltlResult.constraint || '[MISSING_CONSTRAINT]'}</span>{' '}
-                        <span className={ltlResult.output ? 'text-purple-400' : 'text-red-500 underline decoration-dotted'}>{ltlResult.output || '[MISSING_OUTPUT]'}</span>
-                      </div>
-                      
-                      {!ltlResult.allDefined && (
-                        <div className="text-[9px] text-red-500 tracking-widest font-bold flex items-center gap-2">
-                           <span>⚠ SEMANTIC_INCOMPLETENESS_DETECTED</span>
-                           <span className="hidden sm:inline opacity-50 font-normal">{'//'} INSUFFICIENT DATA IN SOURCE PROMPT</span>
-                        </div>
-                      )}
-
-                      <button 
-                        disabled={!ltlResult.allDefined}
-                        onClick={() => navigator.clipboard.writeText(ltlResult.command)}
-                        className={`self-start text-[8px] font-bold border px-3 py-1 transition-all uppercase tracking-widest ${ltlResult.allDefined ? 'border-white/20 hover:bg-white hover:text-black hover:border-white' : 'border-red-500/20 text-red-500/40 cursor-not-allowed'}`}
-                      >
-                        [ {ltlResult.allDefined ? 'COPY_TO_CONTEXT' : 'INCOMPLETE_SPEC'} ]
-                      </button>
-                   </div>
+            <div className="flex flex-col gap-12 pt-8 border-t border-white/10 animate-in fade-in slide-in-from-top-4 duration-500">
+              
+              <div className="flex flex-col gap-2">
+                <label className="text-[10px] font-bold text-white uppercase tracking-[0.2em] opacity-40">SEMANTIC_AUDIT_VIEW [WORD_STATUS]</label>
+                <div className="p-6 bg-white/[0.02] border border-white/10 text-xs leading-loose font-mono whitespace-pre-wrap tracking-wide">
+                   {ltlResult.highlightedSource}
+                </div>
+                <div className="text-[8px] text-ltl-grey/40 uppercase tracking-[0.2em] flex gap-4 mt-2">
+                   <div className="flex items-center gap-1"><div className="w-1.5 h-1.5 bg-white underline decoration-white/20" /> MAPPED_TO_SYMBOL</div>
+                   <div className="flex items-center gap-1"><div className="w-1.5 h-1.5 bg-red-500/60 line-through" /> MINIFIED_OUT_OF_CONTEXT</div>
                 </div>
               </div>
 
-              <div className="flex flex-col gap-6">
-                 <div className="flex flex-col gap-2">
-                   <label className="text-[10px] font-bold text-white uppercase tracking-[0.2em] opacity-40">EFFICIENCY_TELEMETRY</label>
-                   <div className="grid grid-cols-3 gap-4 h-full">
-                      <div className="border border-white/10 bg-white/[0.02] p-4 flex flex-col justify-center items-center">
-                        <span className="text-[8px] text-ltl-grey/50 uppercase mb-1">RAW</span>
-                        <span className="text-xl font-bold">{ltlResult.stTokens}</span>
-                      </div>
-                      <div className="border border-white/10 bg-white/[0.02] p-4 flex flex-col justify-center items-center">
-                        <span className="text-[8px] text-ltl-grey/50 uppercase mb-1">LTL</span>
-                        <span className="text-xl font-bold">{ltlResult.ltlTokens}</span>
-                      </div>
-                      <div className="border border-white/10 bg-white/5 p-4 flex flex-col justify-center items-center">
-                        <span className="text-[8px] text-green-400/80 uppercase mb-1">SAVED</span>
-                        <span className="text-xl font-bold text-green-400">{ltlResult.efficiency}%</span>
-                      </div>
-                   </div>
+              <div className="flex flex-col gap-4">
+                 <label className="text-[10px] font-bold text-white uppercase tracking-[0.2em] opacity-40">MINIFIED_LTL_OUTPUT [v2.1_TOKEN_CRUSH]</label>
+                 <div className="bg-white/5 border border-white/10 p-8 flex flex-col gap-8 group min-h-[250px] justify-between">
+                    <div className="flex flex-col gap-6">
+                       {ltlResult.ltlChain.map((cmd, idx) => (
+                          <div key={idx} className="flex flex-col gap-3 group/item border-l-2 border-white/10 pl-6 py-2 hover:border-white transition-all">
+                             <div className="text-[10px] font-bold text-white/30 tracking-[0.3em]">STEP_{idx + 1}</div>
+                             <div className="flex flex-wrap text-lg md:text-2xl font-bold tracking-tight">
+                                {cmd.split(' ').map((p, i) => (
+                                   <span key={i} className="mr-2">{p}</span>
+                                ))}
+                                {ltlResult.hasMinContext && (
+                                   <div className="flex items-center gap-3">
+                                     <span className="text-ltl-grey/30">& </span>
+                                     <span className="text-green-400 italic text-sm md:text-lg font-normal break-all line-clamp-2">
+                                       {ltlResult.minifiedContext}
+                                     </span>
+                                   </div>
+                                )}
+                             </div>
+                          </div>
+                       ))}
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center justify-between border-t border-white/10 pt-8 mt-4">
+                       <div className="flex flex-col gap-1">
+                          <div className="text-[10px] font-bold text-white uppercase tracking-[0.2em] opacity-40">TOKEN_CRUSH_EFFICIENCY</div>
+                          <div className="text-2xl font-bold text-green-400">{ltlResult.efficiency}% <span className="text-[10px] text-ltl-grey uppercase font-normal ml-2">MAX_SAVING</span></div>
+                       </div>
+                       
+                       <button 
+                         disabled={!ltlResult.allDefined}
+                         onClick={() => copy(ltlResult.fullUnifiedChain)}
+                         className={`text-xs font-bold border-2 px-8 py-3 transition-all uppercase tracking-widest ${ltlResult.allDefined ? 'border-green-400 text-green-400 hover:bg-green-400 hover:text-black shadow-[0_0_15px_rgba(74,222,128,0.1)]' : 'border-red-500/20 text-red-500/40 cursor-not-allowed'}`}
+                       >
+                         {copiedSuccess ? '[ 2.1_PROTO_COPIED! ]' : '[ COPY_MINIFIED_COMMAND ]'}
+                       </button>
+                    </div>
                  </div>
               </div>
-            </div>
+
+           </div>
           )}
         </div>
 
-        <section className="mt-12 opacity-50">
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-[9px] font-mono leading-relaxed uppercase tracking-widest text-ltl-grey">
-              <div>
-                [001] THE COMPILER MAPS SEMANTIC INTENT TO A DETERMINISTIC SYMBOL DICTIONARY. 
-                RED INDICATORS SIGNAL AREAS WHERE SOURCE PROMPT AMBIGUITY PREVENTS LOSSLESS TRANSFORMATION.
+        <section className="mt-12 opacity-60 border border-white/10 p-8 bg-white/[0.01]">
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+              <div className="flex flex-col gap-4">
+                 <h4 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] border-b border-white/10 pb-2">v2.1_Minification_Logic</h4>
+                 <ul className="text-[10px] text-ltl-grey font-mono space-y-2 uppercase leading-relaxed">
+                    <li>- [STOPWORDS] Stripping "the", "and", "please", etc.</li>
+                    <li>- [DELTA_ENCODING] Replaces "refactor" with "ref", "scouting" with "scout".</li>
+                    <li>- [DENSITY] Multi-pass extraction + Context Minification targets 99%+ efficiency.</li>
+                 </ul>
               </div>
-              <div>
-                [002] ALL TRANSFORMATIONS ARE EXECUTED ON-DEVICE. NO DATA LEAVES YOUR LOCAL DOMAIN. 
-                LTL IS DESIGNED FOR ZERO-LATENCY PROMPT ENGINEERING.
-              </div>
-              <div>
-                [003] FOR MAXIMUM EFFICIENCY, PROVIDE CONTEXTUAL CLUES (e.g. "Security Audit" OR "Refactor React Components").
+              <div className="flex flex-col gap-4">
+                 <h4 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] border-b border-white/10 pb-2">Architectural_Vanguard</h4>
+                 <p className="text-[9px] text-ltl-grey font-mono leading-relaxed uppercase">
+                    CONTEXT MINIFICATION TREATS THE "&" PAYLOAD AS A COMPRESSED DELTA STREAM. 
+                    BY REMOVING SEMANTIC NOISE AND COMPACTING RESIDUAL TECHNICAL TERMS, WE MINIMIZE TOKEN CONSUMPTION WHILE RETAINING THE CORE NUANCE OF THE LLM'S INSTRUCTION SET.
+                 </p>
               </div>
            </div>
         </section>

@@ -15,7 +15,7 @@ export default function Navbar() {
           <span className="text-xs tracking-widest uppercase text-white font-bold ml-1 hidden sm:inline">
             Less-Token-Language
           </span>
-          <span className="text-xs text-white/30 hidden md:inline">v1.5.1</span>
+          <span className="text-xs text-white/30 hidden md:inline">v1.7.0</span>
         </Link>
 
         {/* Nav links */}
