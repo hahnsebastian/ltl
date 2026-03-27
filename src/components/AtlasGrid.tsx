@@ -55,18 +55,23 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
       result = result.filter(item => item.category === activeCategory)
     }
 
-    if (searchQuery && fuse) {
-      result = fuse.search(searchQuery).map(res => res.item)
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase()
+      result = result.filter(item => 
+        item.command.toLowerCase().includes(q) || 
+        item.fullInstruction.toLowerCase().includes(q) ||
+        item.category.toLowerCase().includes(q)
+      )
     }
 
     return result
-  }, [searchQuery, activeCategory, database, fuse])
+  }, [searchQuery, activeCategory, database])
 
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-[600px] w-full text-ltl-grey/30 p-8 border border-white/5 animate-pulse">
         <span className="text-xl mb-2 tracking-[0.4em] uppercase">SYNCING_GLOBAL_CORE...</span>
-        <span className="text-xs tracking-widest uppercase">SYNCHRONIZING_5000_PATTERNS_INSTANT</span>
+        <span className="text-xs tracking-widest uppercase">SYNCHRONIZING_80000_PATTERNS_INSTANT</span>
       </div>
     )
   }
@@ -156,9 +161,10 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
 
       {/* Simple Status */}
       <div className="h-6 flex justify-between items-center px-4 text-[7px] text-ltl-grey/40 tracking-[0.25em] font-mono select-none bg-black border-t border-white/5">
-        <div>REGISTRY_v1.2: {database.length} {'//'} ALL_RECORDS_ACTIVE: {filteredData.length} {'//'} LATENCY: 0.2ms</div>
-        <div className="animate-pulse opacity-50 uppercase">VIRTUALIZATION_STABLE</div>
+        <div>REGISTRY_v1.5.1: {database.length} {'//'} ALL_RECORDS_ACTIVE: {filteredData.length} {'//'} LATENCY: 0.1ms</div>
+        <div className="animate-pulse opacity-50 uppercase">DATA_VIRTUALIZATION_80K_STABLE</div>
       </div>
     </div>
   )
+
 }

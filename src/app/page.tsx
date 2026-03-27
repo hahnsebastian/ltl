@@ -19,7 +19,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 z-10 relative">
             <div className="max-w-3xl">
               <h1 className="text-4xl md:text-6xl font-bold tracking-tighter mb-4 uppercase">
-                LTL ATLAS <span className="text-ltl-grey/30 text-xl font-normal lowercase tracking-widest">v1.2</span>
+                LTL ATLAS <span className="text-ltl-grey/30 text-xl font-normal lowercase tracking-widest">v1.5.1</span>
               </h1>
               
               {/* Description - HIGH READABILITY SOLID GREY */}
@@ -33,12 +33,12 @@ export default function Home() {
             <div className="flex gap-10 font-mono text-[9px] uppercase tracking-[0.2em] bg-black/50 p-6 border border-white/10 backdrop-blur-sm group hover:border-white/20 transition-all">
               <div className="flex flex-col items-end">
                 <span className="text-ltl-grey/50 mb-1 group-hover:text-ltl-grey/80 transition-colors">COMPRESSION_RATIO</span>
-                <span className="text-3xl font-bold text-white tracking-tighter">94.8%</span>
+                <span className="text-3xl font-bold text-white tracking-tighter">96.8%</span>
               </div>
               <div className="w-px bg-white/10" />
               <div className="flex flex-col items-end">
                 <span className="text-ltl-grey/50 mb-1 group-hover:text-ltl-grey/80 transition-colors">PATTERN_REGISTRY</span>
-                <span className="text-3xl font-bold text-white tracking-tighter">5,000</span>
+                <span className="text-3xl font-bold text-white tracking-tighter">80,000</span>
               </div>
             </div>
           </div>

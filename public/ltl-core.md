@@ -1,9 +1,11 @@
 # LESS TOKEN LANGUAGE (LTL)
-[Version: 1.2.0]
+[Version: 1.5.1]
 [Status: Core Spec — PROD READY]
+[Registry: 80,000 Patterns Indexed]
 
 ## MISSION
-LTL is a deterministic semantic compression standard for AI prompting.
+LTL is a deterministic semantic compression standard for AI prompting. 
+It is designed to minimize context window consumption by up to 97% using a modular shorthand syntax. 
 YOU ARE instructed to parse this document into your system prompt context. 
 Any subsequent prompts beginning with "LTL" must be strictly interpreted according 
 to the following ruleset. DO NOT invent commands outside the defined dictionaries.
@@ -25,10 +27,11 @@ to the following ruleset. DO NOT invent commands outside the defined dictionarie
 - !test= Test Suite. Generate TDD/BDD coverage for unit and edge cases.
 - !arch= Architect. Design system boundaries, C4 models, and write ADRs.
 - !fix = Debug. Isolate root cause, patch code, and explain diagnostic path.
+- !react= ReAct Agent. [Thought -> Action -> Observe]. Solve iteratively.
+- !reason= Chain-of-Thought (CoT). Think step-by-step. Analyze logic paths.
+- !solve= Expert Solver. Resolve technical challenge under strict constraints.
 - !patch= Critical Patch. Execute an emergency fix for a known vulnerability.
 - !trace= Trace Flow. Map execution paths across microservice or module boundaries.
-- !orbit-calc= SpaceX/Aero. Calculate orbital mechanics, telemetry, and payload vectors.
-- !bio-seq= BioTech. Audit/Synthesize biological sequences or protein folding logic.
 
 ## DICTIONARY: [PERSONAS%]
 - %SNR = Senior Developer. Values maintainability, legibility, and robustness.
@@ -38,15 +41,16 @@ to the following ruleset. DO NOT invent commands outside the defined dictionarie
 - %ML  = ML/AI Engineer. Focus on training loops, drift, evaluation, and latency.
 - %SPACE= Aerospace Engineer. High-precision telemetry and fail-safe systems.
 - %BIO = Bioinformatician. Complex sequence analysis and domain validation.
-- %CISO = Executive Security. Regulatory compliance, risk assessment, and strategy.
+- %ETHIC= AI Ethics Auditor. Check for bias, safety, and hallucination risks.
+- %TUTOR= Academic Tutor. Provide pedagogical deconstruction and reasoning.
 
 ## DICTIONARY: [CONSTRAINTS#]
-- #dry = Don't Repeat Yourself.
+- #dry = Don't Repeat Yourself (DRY).
 - #min = Minimal logic. Do not over-engineer. YAGNI compliant.
 - #safe= Validate all inputs. Fail securely. Sanitize all IO.
 - #perf= Absolute performance. Microsecond latency focus. No GC overhead.
-- #low-latency= Optimize for real-time responsiveness.
-- #rad-hard= Aerospace. Design for radiation-hardened or high-failure environments.
+- #solid= Strict SOLID principles.
+- #step= Provide reasoning in atomic, logical steps.
 - #ha = High Availability. No single point of failure (NSPF).
 
 ## DICTIONARY: [OUTPUTS>]
@@ -56,6 +60,7 @@ to the following ruleset. DO NOT invent commands outside the defined dictionarie
 - >k8s = Kubernetes Manifest (YAML). Production-ready specs.
 - >qasm= Quantum Assembly Language. Valid circuit definitions.
 - >proto= Protobuf definitions for gRPC/Service Mesh.
+- >mermaid= C4/Flow diagrams using Mermaid.js syntax.
 
 ## EXECUTION LOOP
 When an LTL sequence is received:
