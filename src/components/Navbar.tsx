@@ -23,7 +23,6 @@ export default function Navbar() {
           {[
             { href: '/', label: 'ATLAS' },
             { href: '/whitepaper', label: 'WHITE PAPER' },
-            { href: '/transform', label: 'TRANSFORM' },
             { href: '/ltl-core.md', label: 'LTL CORE' },
             { href: 'https://github.com/hahnsebastian/ltl', label: 'GITHUB', external: true },
           ].map(link => (
@@ -55,7 +54,6 @@ export default function Navbar() {
           {[
             { href: '/', label: 'ATLAS' },
             { href: '/whitepaper', label: 'WHITE PAPER' },
-            { href: '/transform', label: 'TRANSFORM' },
             { href: '/ltl-core.md', label: 'LTL CORE' },
             { href: 'https://github.com/hahnsebastian/ltl', label: 'GITHUB' },
           ].map(link => (
