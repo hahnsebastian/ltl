@@ -15,13 +15,14 @@ export default function Navbar() {
           <span className="text-xs tracking-widest uppercase text-white font-bold ml-1 hidden sm:inline">
             Less-Token-Language
           </span>
-          <span className="text-xs text-white/30 hidden md:inline">v1.0</span>
+          <span className="text-xs text-white/30 hidden md:inline">v1.5.1</span>
         </Link>
 
         {/* Nav links */}
         <div className="hidden md:flex items-center text-xs tracking-wider h-full">
           {[
             { href: '/', label: 'ATLAS' },
+            { href: '/compiler', label: 'COMPILER' },
             { href: '/whitepaper', label: 'WHITE PAPER' },
             { href: '/ltl-core.md', label: 'LTL CORE' },
             { href: 'https://github.com/hahnsebastian/ltl', label: 'GITHUB', external: true },
@@ -53,6 +54,7 @@ export default function Navbar() {
         <div className="md:hidden border-t border-white bg-black">
           {[
             { href: '/', label: 'ATLAS' },
+            { href: '/compiler', label: 'COMPILER' },
             { href: '/whitepaper', label: 'WHITE PAPER' },
             { href: '/ltl-core.md', label: 'LTL CORE' },
             { href: 'https://github.com/hahnsebastian/ltl', label: 'GITHUB' },
