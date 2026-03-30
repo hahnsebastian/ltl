@@ -21,7 +21,7 @@ export default function WhitePaper() {
                </div>
                <div className="flex justify-between items-center border-b border-white/5 pb-2">
                  <strong className="text-white uppercase tracking-widest text-[10px]">Status</strong>
-                 <span>PROD_ACTIVE [200,000 Patterns]</span>
+                 <span>PROD_ACTIVE [500,000 Patterns]</span>
                </div>
                <div className="flex justify-between items-center border-b border-white/5 pb-2">
                  <strong className="text-white uppercase tracking-widest text-[10px]">Protocol</strong>
@@ -48,7 +48,7 @@ export default function WhitePaper() {
         <section className="mb-16">
           <h2 className="text-white uppercase tracking-widest text-lg mb-6 border-l-4 border-white pl-6">01_The v2.0 Shift: Unified Context</h2>
           <p className="text-ltl-grey leading-loose mb-6">
-            LTL v2.0 simplifies the prompt engineering paradigm by introducing the <strong>"Unified Context Operator" (&)</strong>. 
+            LTL v2.0 simplifies the prompt engineering paradigm by introducing the <strong>&quot;Unified Context Operator&quot; (&amp;)</strong>. 
             Historically, prompt compression required a separation between deterministic shorthands and literal nuances. 
             v2.0 bridges this gap by formally embedding raw textual context directly into the command string.
           </p>
@@ -63,7 +63,7 @@ export default function WhitePaper() {
           <p className="text-ltl-grey leading-loose mb-6">
             The v2.0 engine enables <strong>Recursive Intent Extraction</strong>. 
             One natural language prompt can now generate a vertical <strong>Chain of LTL Steps</strong>. 
-            This reduces information loss by converting secondary tasks (e.g., "Refactor and then document") into 
+            This reduces information loss by converting secondary tasks (e.g., &quot;Refactor and then document&quot;) into 
             independent, optimized LTL triggers within the same payload.
           </p>
         </section>

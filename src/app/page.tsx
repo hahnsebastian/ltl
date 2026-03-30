@@ -38,7 +38,7 @@ export default function Home() {
               <div className="w-px bg-white/10" />
               <div className="flex flex-col items-end">
                 <span className="text-ltl-grey/50 mb-1 group-hover:text-ltl-grey/80 transition-colors">PATTERN_REGISTRY</span>
-                <span className="text-3xl font-bold text-white tracking-tighter">200,000</span>
+                <span className="text-3xl font-bold text-white tracking-tighter">500,000</span>
               </div>
             </div>
           </div>

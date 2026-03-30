@@ -274,16 +274,16 @@ export default function LTLCompiler() {
               <div className="flex flex-col gap-4">
                  <h4 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] border-b border-white/10 pb-2">v2.1_Minification_Logic</h4>
                  <ul className="text-[10px] text-ltl-grey font-mono space-y-2 uppercase leading-relaxed">
-                    <li>- [STOPWORDS] Stripping "the", "and", "please", etc.</li>
-                    <li>- [DELTA_ENCODING] Replaces "refactor" with "ref", "scouting" with "scout".</li>
+                    <li>- [STOPWORDS] Stripping &quot;the&quot;, &quot;and&quot;, &quot;please&quot;, etc.</li>
+                    <li>- [DELTA_ENCODING] Replaces &quot;refactor&quot; with &quot;ref&quot;, &quot;scouting&quot; with &quot;scout&quot;.</li>
                     <li>- [DENSITY] Multi-pass extraction + Context Minification targets 99%+ efficiency.</li>
                  </ul>
               </div>
               <div className="flex flex-col gap-4">
                  <h4 className="text-[10px] font-bold text-white uppercase tracking-[0.2em] border-b border-white/10 pb-2">Architectural_Vanguard</h4>
                  <p className="text-[9px] text-ltl-grey font-mono leading-relaxed uppercase">
-                    CONTEXT MINIFICATION TREATS THE "&" PAYLOAD AS A COMPRESSED DELTA STREAM. 
-                    BY REMOVING SEMANTIC NOISE AND COMPACTING RESIDUAL TECHNICAL TERMS, WE MINIMIZE TOKEN CONSUMPTION WHILE RETAINING THE CORE NUANCE OF THE LLM'S INSTRUCTION SET.
+                    CONTEXT MINIFICATION TREATS THE &quot;&amp;&quot; PAYLOAD AS A COMPRESSED DELTA STREAM. 
+                    BY REMOVING SEMANTIC NOISE AND COMPACTING RESIDUAL TECHNICAL TERMS, WE MINIMIZE TOKEN CONSUMPTION WHILE RETAINING THE CORE NUANCE OF THE LLM&apos;S INSTRUCTION SET.
                  </p>
               </div>
            </div>

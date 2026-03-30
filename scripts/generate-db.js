@@ -41,9 +41,9 @@ const synthScopes = ['@/src','@/api','@/db','@/ui','@/auth','@docs','@tests','@/
 const synthConstraints = ['#dry','#min','#std','#fast','#safe','#typed','#acc','#i18n','#a11y','#perf','#solid','#kiss','#yagni','#clean','#immut','#pure','#async','#sync','#tdd','#bdd','#cqrs','#event','#rest','#gql','#atomic','#idempotent','#stateless','#ha','#resilient','#gas-opt','#no-reentrancy','#low-latency','#deterministic','#real-time','#low-power','#privacy','#ethics','#rad-hard','#cot','#step','#detailed','#concise','#creative','#professional', '#narrative', '#atomic', '#immutable', '#idempotent'];
 const synthOutputs = ['>md','>json','>ts','>py','>sql','>yaml','>mdx','>html','>sh','>go','>rs','>java','>kt','>swift','>graphql','>proto','>toml','>env','>csv','>xml','>tf','>helm','>docker','>k8s','>mermaid','>uml','>sol','>unity-csharp','>unreal-cpp','>abap','>apex','>qasm','>onnx','>safetensors', '>pda', '>pdb'];
 
-async function fetchPrompts() {
+async function fetchSource(url) {
   return new Promise((resolve) => {
-    https.get('https://raw.githubusercontent.com/f/prompts.chat/main/prompts.csv', (res) => {
+    https.get(url, { headers: { 'User-Agent': 'Node.js' } }, (res) => {
       let data = '';
       res.on('data', (chunk) => data += chunk);
       res.on('end', () => resolve(data)).on('error', () => resolve(''));
@@ -51,17 +51,57 @@ async function fetchPrompts() {
   });
 }
 
-function parseCSV(csvText) {
+async function fetchAllRawPrompts() {
+  const [promptsCsv, awesomeInst, awesomePE, promptSource] = await Promise.all([
+    fetchSource('https://raw.githubusercontent.com/f/prompts.chat/main/prompts.csv'),
+    fetchSource('https://raw.githubusercontent.com/yaodongC/awesome-instruction-dataset/main/README.md'),
+    fetchSource('https://raw.githubusercontent.com/promptslab/Awesome-Prompt-Engineering/main/README.md'),
+    fetchSource('https://raw.githubusercontent.com/bigscience-workshop/promptsource/main/README.md')
+  ]);
+
   const entries = [];
-  const lines = csvText.split('\n').slice(1);
-  for (const line of lines) {
-    if (!line.trim()) continue;
-    const matches = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
-    if (matches.length < 2) continue;
-    const act = matches[0].replace(/^"|"$/g, '').trim();
-    const prompt = matches[1].replace(/^"|"$/g, '').replace(/""/g, '"').trim();
-    if (act && prompt) entries.push({ act, prompt });
+  
+  if (promptsCsv) {
+    const lines = promptsCsv.split('\n').slice(1);
+    for (const line of lines) {
+      if (!line.trim()) continue;
+      const matches = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
+      if (matches.length < 2) continue;
+      const act = matches[0].replace(/^"|"$/g, '').trim();
+      const prompt = matches[1].replace(/^"|"$/g, '').replace(/""/g, '"').trim();
+      if (act && prompt) entries.push({ act, prompt });
+    }
   }
+
+  if (awesomeInst) {
+    const instMatches = awesomeInst.matchAll(/- Summary:\s*(.+)/g);
+    for (const match of instMatches) {
+      if (match[1]) entries.push({ act: 'Dataset Engineer', prompt: match[1].trim() });
+    }
+  }
+
+  if (awesomePE) {
+    const peMatches = awesomePE.matchAll(/- \[.*?\]\(.*?\) (?:\[.*?\] )?— (.+)/g);
+    for (const match of peMatches) {
+      if (match[1]) entries.push({ act: 'Prompt Researcher', prompt: match[1].trim() });
+    }
+    const peTables = awesomePE.matchAll(/\|\s*\*\*.*?\*\*\s*\|\s*(.*?)\s*\|/g);
+    for (const match of peTables) {
+      if (match[1] && !match[1].toLowerCase().includes('description')) {
+        entries.push({ act: 'AI Tools Expert', prompt: match[1].trim() });
+      }
+    }
+  }
+
+  if (promptSource) {
+    const psMatches = promptSource.matchAll(/```(?:jinja2?|python)\n([\s\S]*?)\n```/g);
+    for (const match of psMatches) {
+      if (match[1] && match[1].length > 10) {
+        entries.push({ act: 'Template Builder', prompt: match[1].replace(/\n/g, ' ').trim() });
+      }
+    }
+  }
+
   return entries;
 }
 
@@ -97,8 +137,7 @@ function deriveLTL(act, prompt) {
 
 (async () => {
   console.log('Scaling LTL Registry v1.8.2 (Pattern Discovery & Optimization)...');
-  const csvContent = await fetchPrompts();
-  const rawPrompts = parseCSV(csvContent);
+  const rawPrompts = await fetchAllRawPrompts();
   console.log(`Integrating ${rawPrompts.length} Curated Personas...`);
 
   const entries = [];
@@ -126,8 +165,8 @@ function deriveLTL(act, prompt) {
     themeFreq[theme] = (themeFreq[theme] || 0) + 1;
   });
 
-  // 2. High-Density Unified Backfill (200,000)
-  const targetCount = 200000;
+  // 2. High-Density Unified Backfill (500,000)
+  const targetCount = 500000;
   console.log(`Generating high-fidelity technical core to reach ${targetCount}...`);
   const prodActions = Object.keys(actionInstructions);
   const prodPersonas = Object.keys(personaLabels);

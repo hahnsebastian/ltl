@@ -71,7 +71,7 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
     return (
       <div className="flex flex-col items-center justify-center h-[600px] w-full text-ltl-grey/30 p-8 border border-white/5 animate-pulse">
         <span className="text-xl mb-2 tracking-[0.4em] uppercase">SYNCING_GLOBAL_CORE...</span>
-        <span className="text-xs tracking-widest uppercase">SYNCHRONIZING_80000_PATTERNS_INSTANT</span>
+        <span className="text-xs tracking-widest uppercase">SYNCHRONIZING_500000_PATTERNS_INSTANT</span>
       </div>
     )
   }
@@ -92,7 +92,10 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
 
     return (
       <div style={style} className="border-b border-white/[0.05] hover:bg-white/[0.02] transition-colors group">
-        <div className="grid grid-cols-[1.5fr_2fr_120px_100px_80px] w-full h-full items-stretch text-[11px]">
+        <div className="grid grid-cols-[80px_1.5fr_2fr_120px_100px_80px] w-full h-full items-stretch text-[11px]">
+          <div className="px-2 py-3 font-mono flex items-center justify-center border-r border-white/10 text-ltl-grey/50">
+            {index + 1}
+          </div>
           <div className="px-4 py-3 font-mono flex items-center border-r border-white/10 whitespace-nowrap overflow-hidden">
             <span className="text-ltl-grey/40 mr-2 shrink-0">LTL</span>
             <div className="flex items-center overflow-hidden">
@@ -130,39 +133,44 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
 
   return (
     <div className="w-full flex flex-col bg-black overflow-hidden select-none border border-white/5">
-      {/* Table Header */}
-      <div className="h-10 border-b border-white/30 z-20 flex text-[9px] font-bold tracking-[0.2em] text-white uppercase bg-black">
-        <div className="grid grid-cols-[1.5fr_2fr_120px_100px_80px] w-full h-full items-center">
-          <div className="px-4 border-r border-white/10 h-full flex items-center">LTL_COMMAND</div>
-          <div className="px-4 border-r border-white/10 h-full flex items-center">INSTRUCTION_SET</div>
-          <div className="px-4 border-r border-white/10 h-full flex items-center text-right justify-end">TOK_SAVED</div>
-          <div className="px-4 border-r border-white/10 h-full flex items-center text-right justify-end">EFF_RATIO</div>
-          <div className="px-4 h-full flex items-center text-right justify-end">ACTION</div>
-        </div>
-      </div>
+      <div className="overflow-x-auto w-full scrollbar-hide">
+        <div className="min-w-[800px] flex flex-col w-full">
+          {/* Table Header */}
+          <div className="h-10 border-b border-white/30 z-20 flex text-[9px] font-bold tracking-[0.2em] text-white uppercase bg-black">
+            <div className="grid grid-cols-[80px_1.5fr_2fr_120px_100px_80px] w-full h-full items-center">
+              <div className="px-2 border-r border-white/10 h-full flex items-center justify-center">ID</div>
+              <div className="px-4 border-r border-white/10 h-full flex items-center">LTL_COMMAND</div>
+              <div className="px-4 border-r border-white/10 h-full flex items-center">INSTRUCTION_SET</div>
+              <div className="px-4 border-r border-white/10 h-full flex items-center text-right justify-end">TOK_SAVED</div>
+              <div className="px-4 border-r border-white/10 h-full flex items-center text-right justify-end">EFF_RATIO</div>
+              <div className="px-4 h-full flex items-center text-right justify-end">ACTION</div>
+            </div>
+          </div>
 
-      {/* Table Body - HIGH PERFORMANCE VIRTUALIZED SCROLL */}
-      <div className="h-[70vh] w-full">
-        <AutoSizer>
-          {({ height, width }) => (
-            <List
-              height={height}
-              itemCount={filteredData.length}
-              itemSize={48}
-              width={width}
-              className="scrollbar-hide"
-              overscanCount={10}
-            >
-              {Row}
-            </List>
-          )}
-        </AutoSizer>
+          {/* Table Body - HIGH PERFORMANCE VIRTUALIZED SCROLL */}
+          <div className="h-[70vh] w-full">
+            <AutoSizer>
+              {({ height, width }) => (
+                <List
+                  height={height}
+                  itemCount={filteredData.length}
+                  itemSize={48}
+                  width={width}
+                  className="scrollbar-hide"
+                  overscanCount={10}
+                >
+                  {Row}
+                </List>
+              )}
+            </AutoSizer>
+          </div>
+        </div>
       </div>
 
       {/* Simple Status */}
       <div className="h-6 flex justify-between items-center px-4 text-[7px] text-ltl-grey/40 tracking-[0.25em] font-mono select-none bg-black border-t border-white/5">
         <div>REGISTRY_v1.5.1: {database.length} {'//'} ALL_RECORDS_ACTIVE: {filteredData.length} {'//'} LATENCY: 0.1ms</div>
-        <div className="animate-pulse opacity-50 uppercase">DATA_VIRTUALIZATION_80K_STABLE</div>
+        <div className="animate-pulse opacity-50 uppercase">DATA_VIRTUALIZATION_500K_STABLE</div>
       </div>
     </div>
   )
