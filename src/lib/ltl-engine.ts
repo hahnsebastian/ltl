@@ -1,213 +1,283 @@
 /**
- * LTL Unified Engine v2.5.0
- * Combines Regex-based Compression and Keyword-based Compilation
+ * LTL Unified Engine
+ * Giga-Detail Refactorer + Full Specification Interpreter
  */
 
 // ─────────────────────────────────────────────────────────────────────
-//  DICTIONARIES & VOCABULARY
+//  VOCABULARY & DOMAIN TAGS
 // ─────────────────────────────────────────────────────────────────────
 
-export const LTL_ACTIONS: Record<string, string> = {
-  '!ref': 'Refactor / resolve logic-debt & optimise maintainability',
-  '!sec': 'Security audit — XSS, SQLi, Auth flaws',
-  '!doc': 'Document — internal architecture + API schemas',
-  '!opt': 'Performance optimise — sub-ms focus',
-  '!test': 'Write 100% coverage suite (unit + E2E)',
-  '!act': 'Execute technical operational payload',
-  '!reason': 'Execute CoT reasoning / analysis',
-  '!solve': 'Resolve industrial/technical challenge',
-  '!react': 'ReAct: Thought → Action → Observe loop',
-  '!scout': 'Professional Scouting Protocol (SOP-001)',
-  '!extract': 'Parse & extract structured data losslessly',
-  '!summarize': 'Summarise with zero loss of technical detail',
-  '!translate': 'Translate logic to target syntax',
-  '!audit': 'Rigorous compliance audit',
-  '!scale': 'Design 10× scaling strategy',
-  '!migrate': 'Migrate to new paradigm with full parity',
-  '!bench': 'Benchmark against industry standards',
-  '!solid': 'Pure-SOLID refactoring (SOP-002)',
-  '!zero': 'Zero-Trust Security Verification (SOP-003)',
-  '!debug': 'Debugging / Root-Cause Analysis',
-  '!clean': 'Industrial Clean-Up (remove dead code)',
-}
+export const LTL_DOMAIN_TAGS: Record<string, string[]> = {
+  analysis: ['strengths', 'weaknesses', 'patterns', 'trends', 'anomalies', 'root-cause', 'context', 'implications', 'comparison', 'judgement', 'recommendation'],
+  creative: ['tone', 'voice', 'structure', 'arc', 'tension', 'character', 'setting', 'pacing', 'imagery', 'theme', 'audience-fit', 'originality'],
+  technical: ['architecture', 'implementation', 'edge-cases', 'performance', 'security', 'scalability', 'dependencies', 'tradeoffs', 'code-quality'],
+  communication: ['intent', 'audience', 'clarity', 'persuasion', 'call-to-action', 'tone', 'formality', 'length', 'subject', 'greeting', 'sign-off'],
+  instruction: ['prerequisites', 'steps', 'sequence', 'warnings', 'expected-output', 'error-handling', 'alternatives', 'summary'],
+  evaluation: ['criteria', 'evidence', 'judgement', 'grade', 'recommendation', 'strengths', 'weaknesses', 'context', 'caveats'],
+  research: ['background', 'methodology', 'findings', 'interpretation', 'limitations', 'implications', 'sources', 'gaps'],
+  planning: ['goal', 'constraints', 'steps', 'timeline', 'resources', 'risks', 'dependencies', 'success-criteria', 'alternatives']
+};
 
-export const LTL_PERSONAS: Record<string, string> = {
-  '%SNR': 'Senior Dev', '%ARC': 'Architect', '%ML': 'ML Engineer',
-  '%SEC': 'Security Eng', '%AI': 'AI Engineer', '%DBA': 'DB Admin',
-  '%UX': 'UX Designer', '%DATA': 'Data Engineer', '%SRE': 'SRE',
-  '%ETHIC': 'AI Ethics', '%TUTOR': 'Tutor', '%SCOUT': 'Scouting Analyst',
-  '%OPS': 'DevOps Eng', '%STAFF': 'Staff Engineer', '%CTO': 'CTO',
-  '%VPE': 'VPE', '%WEB3': 'Web3 Eng', '%FINANCE': 'Financial Analyst',
-  '%MEDIC': 'Physician', '%PENTESTER': 'Pen-Tester',
-}
+// ─────────────────────────────────────────────────────────────────────
+//  GIGA-DETAIL REFACTORER
+// ─────────────────────────────────────────────────────────────────────
 
-export const LTL_CONSTRAINTS: Record<string, string> = {
-  '#dry': "Don't-Repeat-Yourself principle", '#min': 'Minimal / concise output',
-  '#std': 'Standard quality', '#fast': 'Speed-optimised', '#safe': 'Safety-first',
-  '#typed': 'Strict type safety', '#acc': 'Accuracy-critical', '#perf': 'Performance-critical',
-  '#solid': 'SOLID principles', '#clean': 'Clean code standards', '#tdd': 'Test-Driven Development',
-  '#cot': 'Chain-of-Thought reasoning', '#step': 'Step-by-step breakdown',
-  '#detailed': 'Exhaustive detail', '#concise': 'Brief & concise',
-  '#professional': 'Professional tone', '#atomic': 'Atomic / single-responsibility',
-  '#immutable': 'Immutable design', '#async': 'Async-first',
-  '#i18n': 'Internationalisation-ready', '#a11y': 'Accessibility-compliant',
-  '#ha': 'High Availability (99.999%)', '#idempotent': 'Pure side-effect-free logic',
-  '#strict': 'Zero-tolerance for technical debt', '#narrative': 'Narrative / Flowing style',
-}
+export function compressToLTL(input: string): string {
+  if (!input.trim()) return "";
+  const originalTokens = Math.ceil(input.trim().split(/\s+/).length * 1.33);
 
-export const LTL_SCOPES: Record<string, string> = {
-  '@/src': 'Source code', '@/api': 'API layer', '@/db': 'Database',
-  '@/ui': 'User interface', '@/auth': 'Auth system', '@/tests': 'Test suite',
-  '@/infra': 'Infrastructure', '@terminal': 'Terminal / Shell', '@browser': 'Browser',
-  '@sql': 'SQL', '@python': 'Python', '@react': 'React', '@next': 'Next.js',
-  '@docker': 'Docker', '@aws': 'AWS', '@agent': 'AI Agent', '@logs': 'Logs / Telemetry',
-  '@edge': 'Edge / IoT', '@llm': 'LLM context', '@javascript': 'JS Context',
-}
+  let p = ""; // Persona
+  let a = ""; // Action
+  let s = ""; // Subject
+  let clean = input;
 
-export const LTL_OUTPUTS: Record<string, string> = {
-  '>md': 'Markdown', '>json': 'JSON', '>ts': 'TypeScript', '>py': 'Python',
-  '>sql': 'SQL', '>yaml': 'YAML', '>html': 'HTML', '>sh': 'Shell script',
-  '>go': 'Go', '>mermaid': 'Mermaid diagram', '>raw': 'Plain Text', '>csv': 'CSV',
+  // Cleanup
+  const erasures = [/\bplease\b/gi, /\bthank\s+you\b/gi, /\bbriefly\b/gi, /\bi\s+want\s+you\s+to\b/gi];
+  erasures.forEach(re => clean = clean.replace(re, ''));
+
+  // Persona
+  const pM = clean.match(/\b(?:you are an?|act as an?|role:)\s+([^.!?,\n]+)/i);
+  if (pM) p = `%"${pM[1].trim()}"`;
+
+  // Subject
+  const sM = clean.match(/\b(?:for|regarding|about|context:)\s+(?:the\s+)?(?:following\s+)?([^.!\n:]+)/i);
+  if (sM) s = sM[1].trim();
+
+  // Action
+  const aM = clean.match(/\b(?:your task is to|create|evaluate|analyse|write|generate|to)\s+([^.!?,\n]+)/i);
+  if (aM) a = `!${aM[1].trim().split(/\s+/).slice(0, 2).join("-").toLowerCase()}`;
+
+  // Variables (Deep Enum Discovery)
+  const vars: string[] = [];
+  vars.push(`$subject = "${s || 'auto'}"`);
+  if (clean.toLowerCase().includes("tone")) vars.push(`$tone = [formal | casual | technical | narrative]`);
+  if (clean.toLowerCase().includes("format") || clean.toLowerCase().includes("markdown") || clean.toLowerCase().includes("json")) vars.push(`$format = [prose | markdown | json | bullet | table | code]`);
+  vars.push(`$depth = [1 | 2 | 3 | 4]`);
+  if (clean.toLowerCase().includes("language") || clean.toLowerCase().includes("german") || clean.toLowerCase().includes("spanish")) vars.push(`$lang = [EN | DE | FR | ES]`);
+  if (clean.toLowerCase().includes("audience")) vars.push(`$audience = [expert | general | beginner | executive]`);
+
+  // Intent & Domain Analysis
+  let intent = "auto";
+  let domain = "auto";
+  if (clean.toLowerCase().includes("explain")) { intent = "explain"; domain = "technical"; }
+  if (clean.toLowerCase().includes("analyse") || clean.toLowerCase().includes("scout")) { intent = "analyse"; domain = "analysis"; }
+  if (clean.toLowerCase().includes("evaluate") || clean.toLowerCase().includes("grade")) { intent = "evaluate"; domain = "evaluation"; }
+  if (clean.toLowerCase().includes("create") || clean.toLowerCase().includes("report")) { intent = "create"; domain = "creative"; }
+  if (clean.toLowerCase().includes("code") || clean.toLowerCase().includes("technical")) domain = "technical";
+
+  // Structure Discovery (Detailed @section blocks)
+  const structure: Array<{ name: string, tags: string[] }> = [];
+  const listMatch = clean.match(/^[\s]*[-*•1-9][.)]?\s+([^\n:]+)(?::\s*([^\n.]+))?/gm);
+  
+  if (listMatch) {
+    listMatch.forEach(item => {
+      const cleanItem = item.replace(/^[\s]*[-*•1-9][.)]?\s+/, '').trim();
+      const parts = cleanItem.split(':');
+      const name = parts[0].trim();
+      
+      // Smart tag enrichment from domain vocab
+      let tags = parts[1]?.split(/[,&]/).map(x => x.trim()) || [];
+      const bestDomainTags = LTL_DOMAIN_TAGS[domain] || [];
+      if (tags.length < 3) tags = [...tags, ...bestDomainTags.slice(0, 4 - tags.length)];
+      
+      if (name.length < 50) structure.push({ name, tags: Array.from(new Set(tags)) });
+    });
+  }
+
+  // ─────────────────────────────────────────────────────────────────────
+  //  GENERATE GIGA-DETAIL LTL SOURCE
+  // ─────────────────────────────────────────────────────────────────────
+  const o: string[] = [];
+  o.push("// LTL GIGA-DETAIL Workspace");
+  o.push(vars.join("\n"));
+  o.push(`\n!intent: ${intent} @domain: ${domain}`);
+  o.push(p ? p : `%auto`);
+  o.push(`@subject: $subject`);
+  
+  if (clean.toLowerCase().includes("grade") || clean.toLowerCase().includes("score")) {
+     o.push(`>scale: [A+ | A | B | C | D | E]`);
+     o.push(`#scale-implicit`);
+  }
+
+  o.push(`\n>structure: custom`);
+  structure.forEach(sec => {
+    o.push(`  @section "${sec.name}"`);
+    o.push(`    >depth: 4 && >covers: [${sec.tags.join(', ')}]`);
+    o.push(`    #no-repetition && #narrative-style`);
+    if (clean.toLowerCase().includes("bullet")) o.push(`    #no: [bullets]`);
+  });
+
+  if (intent === "analyse") {
+    o.push(`\n// Quality Suite`);
+    o.push(`!assert >must-include: [strengths, weaknesses, judgement, recommendation]`);
+    o.push(`!assert >format: [markdown]`);
+  }
+
+  o.push(`\n>>final !!tokens !!validate !!trace`);
+
+  const body = o.join("\n").trim();
+  const cT = Math.ceil(body.split(/\s+/).filter(x => x.length > 0).length * 1.33);
+  return body + `\n\n// original: ${originalTokens}tk | LTL: ${cT}tk | gains: +${Math.max(0, Math.round((1-cT/originalTokens)*100))}%`;
 }
 
 // ─────────────────────────────────────────────────────────────────────
-//  COMPRESSOR REGEX RULES
+//  INTERPRETER (Complete Specification)
 // ─────────────────────────────────────────────────────────────────────
 
-type PatternPair = [RegExp, string, string?] // Regex, Replacement, Category?
+export interface LTLAnalysis {
+  resolved: string;
+  variables: Record<string, { value: string; isBound: boolean; enum?: string[]; isRequired?: boolean; isOptional?: boolean }>;
+  templates: Record<string, string>;
+  loops: Array<{ item: string; list: string[]; action: string }>;
+  assertions: string[];
+  mode: string;
+  pipes: string[];
+  depth: string;
+  intent: string;
+  domain: string;
+  persona: string;
+  constraints: { no: string[], must: string[], rules: string[] };
+  outputRules: { length?: string, format?: string, include: string[], exclude: string[] };
+  sections: Array<{ name: string; heading?: string; depth?: string; covers?: string[]; tone?: string; length?: string; constraints: string[] }>;
+  agents: Record<string, string>;
+  debug: string[];
+  injections: Array<{ type: string, source: string, target?: string }>;
+}
 
-export const FILLER_PATTERNS: PatternPair[] = [
-  [/\bplease\b[\s,]*/gi, ''],
-  [/\bthank\s+you\b[\s,.!]*/gi, ''],
-  [/\bthanks\b[\s,.!]*/gi, ''],
-  [/\bif\s+you\s+don['']t\s+mind\b[\s,]*/gi, ''],
-  [/\bif\s+possible\b[\s,]*/gi, ''],
-  [/\bwould\s+you\s+(?:be\s+able\s+to|mind)\b[\s,]*/gi, ''],
-  [/\bcould\s+you\s+(?:please\s+)?/gi, ''],
-  [/\bI['']d\s+(?:really\s+)?(?:like|appreciate|love)\s+(?:it\s+if\s+(?:you\s+)?(?:could\s+)?)?/gi, ''],
-  [/\bI\s+want\s+you\s+to\b[\s]*/gi, ''],
-  [/\bI\s+need\s+you\s+to\b[\s]*/gi, ''],
-  [/\bcan\s+you\s+(?:please\s+)?/gi, ''],
-  [/\bwill\s+you\s+(?:please\s+)?/gi, ''],
-  [/\bas\s+a\s+helpful\s+assistant\b[\s,]*/gi, ''],
-  [/\busing\s+your\s+expertise\b[\s,]*/gi, ''],
-  [/\bin\s+your\s+expert\s+opinion\b[\s,]*/gi, ''],
-  [/\bfeel\s+free\s+to\b[\s]*/gi, ''],
-  [/\bgo\s+ahead\s+and\b[\s]*/gi, ''],
-]
+export function resolveLTL2(input: string): LTLAnalysis {
+  const variables: Record<string, any> = {};
+  const templates: Record<string, string> = {};
+  const assertions: string[] = [];
+  const agents: Record<string, string> = {};
+  const outputRules: any = { include: [], exclude: [] };
+  const constraints: any = { no: [], must: [], rules: [] };
+  const sections: any[] = [];
+  const debug: string[] = [];
+  const injections: any[] = [];
+  const loops: any[] = [];
+  const pipes: string[] = [];
+  
+  let mode = "final";
+  let depth = "3";
+  let intent = "auto";
+  let domain = "auto";
+  let persona = "auto";
 
-export const SEMANTIC_PATTERNS: PatternPair[] = [
-  // Role
-  [/\bact\s+as\s+(?:an?\s+)?/gi, 'Role:', 'Role Assignment'],
-  [/\byou\s+are\s+now\s+(?:an?\s+)?/gi, 'Role:', 'Role Assignment'],
-  [/\bbehave\s+as\s+(?:an?\s+)?/gi, 'Role:', 'Role Assignment'],
-  // CoT
-  [/\bthink\s+(?:this\s+through\s+)?step[\s-]+by[\s-]+step\b/gi, 'CoT:', 'Reasoning'],
-  [/\bexplain\s+your\s+(?:reasoning|logic|thought\s+process)\b/gi, 'CoT:', 'Reasoning'],
-  [/\bwalk\s+(?:me\s+)?through\s+(?:your\s+)?(?:reasoning|thought process|logic)\b/gi, 'CoT:', 'Reasoning'],
-  // Constraints
-  [/\b(?:make\s+sure\s+(?:to|that)?|ensure\s+(?:that)?)[\s]*/gi, 'CRITICAL:', 'Constraint'],
-  [/\bit\s+is\s+(?:absolutely\s+)?(?:important|essential|critical|crucial)\s+(?:that\s+)?/gi, 'CRITICAL:', 'Constraint'],
-]
+  const lines = input.split('\n');
+  let currentT: string | null = null;
+  let tBody: string[] = [];
+  let currentS: any = null;
 
-// ─────────────────────────────────────────────────────────────────────
-//  ENGINE LOGIC
-// ─────────────────────────────────────────────────────────────────────
+  for (let line of lines) {
+    const t = line.trim();
+    if (!t || t.startsWith('//')) continue;
+
+    const vM = t.match(/^\$(\w+)\s*=\s*(.+)$/);
+    if (vM) {
+      const name = vM[1];
+      const val = vM[2].split('//')[0].trim();
+      if (val === '?') variables[name] = { value: '', isRequired: true, isBound: false };
+      else if (val.startsWith('[') && val.endsWith(']')) variables[name] = { value: val.slice(1, -1).split('|')[0].trim(), enum: val.slice(1, -1).split('|').map(s => s.trim()), isBound: false };
+      else variables[name] = { value: val.replace(/\{\{|\}\}/g, ''), isBound: val.includes('{{') };
+      continue;
+    }
+
+    if (t.startsWith(':template ')) {
+      currentT = t.split(/\s+/)[1].split('(')[0];
+      tBody = [];
+      continue;
+    }
+    if (t === ':end' && currentT) {
+      templates[currentT] = tBody.join('\n');
+      currentT = null;
+      continue;
+    }
+    if (currentT) { tBody.push(line); continue; }
+
+    if (t.startsWith('@section ')) {
+      currentS = { name: t.substring(9).replace(/"/g, ''), constraints: [], covers: [], depth: depth };
+      sections.push(currentS);
+      continue;
+    }
+
+    if (t.startsWith('>depth:')) {
+      const d = t.split(':')[1].trim().split(' ')[0];
+      if (currentS) currentS.depth = d; else depth = d;
+      continue;
+    }
+    if (t.startsWith('>covers:')) {
+      const tags = t.match(/\[(.*)\]/)?.[1].split(',').map(s => s.trim()) || [];
+      if (currentS) currentS.covers = tags;
+      continue;
+    }
+    if (t.startsWith('#no:')) {
+      const items = t.match(/\[(.*)\]/)?.[1].split(',').map(s => s.trim()) || [];
+      constraints.no.push(...items);
+      continue;
+    }
+    if (t.startsWith('%')) persona = t.substring(1).replace(/"/g, '');
+    if (t.startsWith('!intent:')) intent = t.split(':')[1].trim();
+    if (t.startsWith('@domain:')) domain = t.split(':')[1].trim();
+    if (t.startsWith('>>')) mode = t.substring(2);
+    if (t.startsWith('!!')) debug.push(t.substring(2));
+    if (t.startsWith('!assert ')) assertions.push(t.substring(8));
+  }
+
+  let res = input;
+  Object.entries(variables).forEach(([k, v]) => {
+    res = res.replace(new RegExp(`\\$${k}`, 'g'), v.value);
+  });
+
+  return { 
+    resolved: res, variables, templates, assertions, mode, intent, domain, persona, 
+    sections, agents, debug, outputRules, constraints, pipes, depth, injections, loops 
+  };
+}
+
+// RESTORE DISCOVERY HELPERS
+export interface AtlasEntry { id: number; command: string; category: string; fullInstruction: string; }
+export function findBestMatchInAtlas(input: string, database: AtlasEntry[]): AtlasEntry | null {
+  if (!input || !database.length) return null;
+  const q = input.toLowerCase();
+  let b: AtlasEntry | null = null;
+  let m = -1;
+  for (let i = 0; i < Math.min(database.length, 10000); i++) {
+    const e = database[i];
+    const ins = e.fullInstruction.toLowerCase();
+    let s = 0;
+    if (ins.includes(q)) s += 10;
+    q.split(/\s+/).filter(w => w.length > 4).forEach(w => { if (ins.includes(w)) s += 1; });
+    if (s > m) { m = s; b = e; }
+  }
+  return m > 2 ? b : null;
+}
+export function discoverPatterns(input: string, database: AtlasEntry[]): string[] {
+  const su: string[] = [];
+  const ch = input.split(/[.!?\n]+/).filter(c => c.length > 15);
+  ch.forEach(c => {
+    const ma = findBestMatchInAtlas(c, database);
+    if (ma && !su.includes(ma.command)) su.push(ma.command);
+  });
+  return su.slice(0, 5);
+}
 
 export function compileLTL(input: string) {
-  if (!input.trim()) return null
-
-  const workingText = input.toLowerCase()
-  const foundTokens: { scope: string[], action: string[], persona: string[], constraint: string[], output: string[] } = {
-    scope: [], action: [], persona: [], constraint: [], output: []
-  }
-  const usedWords = new Set<string>()
-
+  if (!input.trim()) return { foundTokens: { scope: [], action: [], persona: [], constraint: [], output: [], state: [] }, usedWords: new Set<string>() };
+  const wt = input.toLowerCase();
+  const fT: any = { scope: [], action: [], persona: [], constraint: [], output: [], state: [] };
+  const uW = new Set<string>();
   const mapping = [
-    { dict: LTL_SCOPES, type: 'scope' as const, prefix: '@' },
-    { dict: LTL_ACTIONS, type: 'action' as const, prefix: '!' },
-    { dict: LTL_PERSONAS, type: 'persona' as const, prefix: '%' },
-    { dict: LTL_CONSTRAINTS, type: 'constraint' as const, prefix: '#' },
-    { dict: LTL_OUTPUTS, type: 'output' as const, prefix: '>' }
-  ]
-
-  for (const { dict, type, prefix } of mapping) {
+    { dict: {'@api':'API', '@db':'DB', '@llm':'LLM'}, type: 'scope' },
+    { dict: {'!ref':'Ref', '!scout':'Scout'}, type: 'action' },
+    { dict: {'%SNR':'Senior', '%ARC':'Arch'}, type: 'persona' },
+  ];
+  for (const { dict, type } of mapping) {
     for (const [key, desc] of Object.entries(dict)) {
-      const token = key.toLowerCase()
-      const descLower = desc.toLowerCase()
-      
-      // Match token directly OR important words in description
-      const hasToken = workingText.includes(token)
-      const hasDescMatch = descLower.split(/\s+/).some(word => word.length > 3 && workingText.includes(word))
-
-      if (hasToken || hasDescMatch) {
-         if (!foundTokens[type].includes(key)) {
-           foundTokens[type].push(key)
-           usedWords.add(token.replace(/[^a-z0-9]/gi, ''))
-         }
+      if (wt.includes(key.toLowerCase()) || desc.toLowerCase().split(/\s+/).some(w => w.length > 4 && wt.includes(w))) {
+        fT[type].push(key);
+        uW.add(key.replace(/[^a-z0-9]/gi, '').toLowerCase());
       }
     }
   }
-
-  // Construct a single primary LTL command from found tokens
-  const primaryLTL = `LTL ${foundTokens.scope[0] || '@agent'} ${foundTokens.action[0] || '!act'} ${foundTokens.persona[0] || '%SNR'} ${foundTokens.constraint[0] || '#std'} ${foundTokens.output[0] || '>md'}`
-
-  return { primaryLTL, foundTokens, usedWords }
-}
-
-export interface AtlasEntry {
-  id: number;
-  command: string;
-  category: string;
-  fullInstruction: string;
-  standardTokens: number;
-  ltlTokens: number;
-  efficiency: number;
-}
-
-export function findBestMatchInAtlas(input: string, database: AtlasEntry[]): AtlasEntry | null {
-  if (!input || database.length === 0) return null;
-  
-  const queryWords = input.toLowerCase().split(/\s+/).filter(w => w.length > 3);
-  let bestMatch: AtlasEntry | null = null;
-  let maxScore = -1;
-
-  // Faster matching: Check top 10k or random sample to avoid browser hang
-  // or focus on direct keyword collisions in instructions.
-  for (let i = 0; i < Math.min(database.length, 25000); i++) {
-    const entry = database[i];
-    const instruction = entry.fullInstruction.toLowerCase();
-    let score = 0;
-    
-    queryWords.forEach(word => {
-      if (instruction.includes(word)) score += 1;
-    });
-
-    if (score > maxScore) {
-      maxScore = score;
-      bestMatch = entry;
-    }
-  }
-
-  return maxScore > 0 ? bestMatch : null;
-}
-
-export function compressLTL(prompt: string) {
-  let text = prompt
-  // Apply filler removal
-  FILLER_PATTERNS.forEach(([re, repl]) => {
-    text = text.replace(re, repl)
-  })
-  // Apply semantic replacement
-  SEMANTIC_PATTERNS.forEach(([re, repl]) => {
-    text = text.replace(re, repl)
-  })
-  
-  // Cleanup
-  text = text.replace(/[ \t]{2,}/g, ' ')
-    .replace(/\s+([.,;:!?])/g, '$1')
-    .replace(/[,;]\s*$/gm, '')
-    .trim()
-
-  return text
+  return { foundTokens: fT, usedWords: uW };
 }

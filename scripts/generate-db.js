@@ -150,14 +150,15 @@ function deriveLTL(act, prompt) {
   rawPrompts.forEach((p) => {
     const derived = deriveLTL(p.act, p.prompt);
     personaLabels[derived.persona] = p.act;
+    const structuralCommand = `${derived.persona} ${derived.constraint}\n${derived.scope}\n${derived.action}\n\n#rules:\n  #narrative #step\n\n>structure:\n  @content -> logic && summary`;
     entries.push({
       id: id++,
-      command: `LTL ${derived.scope} ${derived.action} ${derived.persona} ${derived.constraint} ${derived.output}`,
+      command: structuralCommand,
       category: derived.scope === '@player' ? 'Analytics: Scouting' : 'Persona: Curated',
       fullInstruction: p.prompt,
       standardTokens: Math.ceil(p.prompt.split(' ').length * 1.5),
-      ltlTokens: 8,
-      efficiency: Math.round((1 - 8 / (p.prompt.split(' ').length * 1.5)) * 100 * 10) / 10,
+      ltlTokens: 12,
+      efficiency: Math.round((1 - 12 / (Math.ceil(p.prompt.split(' ').length * 1.5))) * 100 * 10) / 10,
       ...derived
     });
     // Track themes
@@ -201,18 +202,22 @@ function deriveLTL(act, prompt) {
     else if (scope === '@medic') category = 'Health: Clinical';
     else if (scope === '@legal') category = 'Legal: Compliance';
 
+    const prodAction = actionInstructions[finalAction] ? finalAction : action;
     const personaLabel = personaLabels[persona] || persona;
-    const instruction = actionInstructions[finalAction] ? actionInstructions[finalAction](scope, personaLabel, category) : actionInstructions[action](scope, personaLabel, category);
+    const instruction = actionInstructions[prodAction](scope, personaLabel, category);
+
+    // LTL 3.0 Structural Format
+    const structuralCommand = `${persona} ${constraint}\n${scope}\n${finalAction}\n\n#rules:\n  #atomic #min #fast\n\n>structure:\n  @main -> logic && result`;
 
     entries.push({
       id: id++,
-      command: `LTL ${scope} ${finalAction} ${persona} ${constraint} ${output}`,
+      command: structuralCommand,
       category,
       fullInstruction: instruction,
       standardTokens: 200 + (i % 300),
-      ltlTokens: 7,
-      efficiency: Math.round((1 - 7 / (200 + (i % 300))) * 100 * 10) / 10,
-      scope, action: finalAction, persona, constraint, output
+      ltlTokens: 12, // Increased for structure
+      efficiency: Math.round((1 - 12 / (200 + (i % 300))) * 100 * 10) / 10,
+      scope, action: prodAction, persona, constraint, output
     });
     if (id % 50000 === 0) console.log(`Step: ${id} concrete entries indexed...`);
   }

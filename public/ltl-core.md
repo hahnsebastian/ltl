@@ -1,194 +1,195 @@
 # LESS TOKEN LANGUAGE (LTL)
-[Version: 2.5.0]
-[Status: Core Spec — PROD READY]
-[Registry: 500,000 Patterns Indexed]
-[Engine: Unified Regex + Semantic Compiler]
+[Status: Core Spec — INDUSTRIAL GRADE]
+[Engine: LTL Specification Interpreter]
 
 ## MISSION
-LTL is a deterministic semantic compression standard for AI prompting.
-It minimizes context window consumption by up to 97% using a modular shorthand syntax.
-Any subsequent prompts beginning with `LTL` must be strictly interpreted according
-to the following ruleset. DO NOT invent commands outside the defined dictionaries.
+LTL is a deterministic prompt programming language designed to maximize semantic density and instructional fidelity. It bridges the gap between natural language intuition and machine-readable logic.
 
-## UNIFIED OUTPUT FORMAT (v2.5.0)
-The LTL Studio v2.5 produces a single combined payload from two engines:
+---
 
+## 1. THE SIGILS
+| Sigil | Name | Description |
+|---|---|---|
+| `@` | Scope | Domain / context / section boundary |
+| `!` | Action | Imperative operation |
+| `%` | Persona | Role, voice, agent definition |
+| `#` | Constraint | Hard rule — forbidden or required |
+| `>` | Output | Shape, format, length, structure of response |
+| `~` | State | Current condition, session state |
+| `?` | Query/Branch | Ambiguity flag, conditional, try/catch |
+| `->` | Flow | Sequential step, pipeline, chain |
+| `&&` | Combine | Parallel, additive, simultaneous |
+| `//` | Comment | Internal note, never rendered |
+| `<<` | Inject | Context input — text, file, url, data, prior |
+| `>>` | Mode/Style | Output mode, style directive, register |
+| `$` | Variable | Declared value, user input binding, enum |
+| `:` | Template | Block declaration |
+| `!run` | Execute | Run a named template |
+| `!meta` | Self-ref | LTL operating on itself |
+| `!!` | Debug | Trace, validate, diff, explain |
+
+---
+
+## 2. THE PROGRAMMING LAYER
+
+### VARIABLES ($)
+```ltl
+$var = value                    // hardcoded
+$var = {{input}}                // bound to user input field
+$var = [optionA | optionB]      // enum — user picks from dropdown
+$var = ?                        // required, must be filled before run
+$var = null                     // optional, skip if empty
 ```
-LTL [Scope] [Action] [Persona] [Constraint] [Output] & [Regex-Compressed Literal]
+
+### PERSONA & SCOPE (%)
+```ltl
+%"string"                       // verbatim role instruction
+%auto                           // infer best persona from @domain
+@domain: value                  // sets context domain
+@domain: auto                   // infer from subject
+@subject: $var                  // binds subject to variable
+@context: "string"              // additional background the AI needs
 ```
 
-- **LTL Header** (`LTL … >output`): Semantic symbols resolved by the Keyword Compiler.
-- **`&` Separator**: Splits the symbolic header from the compressed literal context.
-- **Compressed Literal** (after `&`): The original prompt stripped of filler and compressed by the Regex Engine.
+### INTENT DETECTION (!)
+```ltl
+!intent: explain                // explain a concept
+!intent: create                 // generate new content
+!intent: analyse                // analyse existing content
+!intent: rewrite                // transform existing content
+!intent: compare                // compare two or more things
+!intent: instruct               // step-by-step instructions
+!intent: summarise              // condense existing content
+!intent: evaluate               // judge / score / grade
+!intent: brainstorm             // generate options / ideas
+!intent: converse               // open-ended dialogue
+!intent: extract                // pull structured data from text
+!intent: translate              // language or format conversion
+!intent: auto                   // infer from prompt
+```
 
-### Example
-**Input (verbose):**
-> "Could you please refactor the authentication module in the backend? Make sure it follows DRY principles and outputs TypeScript."
+### DOMAIN TAGS (@)
+```ltl
+// Universal tag vocabularies:
+@analysis -> strengths, weaknesses, patterns, trends, anomalies, root-cause, context, implications
+@creative -> tone, voice, structure, arc, tension, character, setting, pacing, imagery
+@technical -> architecture, implementation, edge-cases, performance, security, scalability
+@communication -> intent, audience, clarity, persuasion, tone, formality, length
+@evaluation -> criteria, evidence, judgement, grade, recommendation
+```
 
-**Unified LTL Output:**
-> `LTL @/auth !ref %SNR #dry >ts & refactor authentication module backend. CRITICAL: follow DRY principles.`
+### STRUCTURE (>)
+```ltl
+>structure: auto                // infer sections from intent + domain
+>structure: flat                // no sections, single continuous output
+>structure: custom              // use explicit @section blocks below
 
----
+>structure:
+  @section "Exact Heading"
+    >depth:N                    // 1=sentence 2=short para 3=full para 4=exhaustive
+    >covers: [tag, tag, tag]    // what this section must address
+    >tone: $tone                // override tone for this section
+    >length: ~Nw                // word count
+    #constraint
+    ?if $var == x -> >depth:4
 
-## SYNTAX STRUCTURE (v2.1.0)
-`LTL [Scope] [Action] [Persona] [Constraint] [Output] & [Literal Context]`
+>heading: [exact | auto | none]
+>style: [narrative | structured | bullets | table | code | mixed | auto]
+>voice: ["description" | auto]
+```
 
-*   `@` **[Scope]**: Target files, modules, deep-tech domain, or specific environments.
-*   `!` **[Action]**: The specific high-level engineering or analytical task to execute.
-*   `%` **[Persona]**: The professional mindset, expertise, and role you must adopt.
-*   `#` **[Constraint]**: Strict rules and architectural principles guiding your behavior.
-*   `>` **[Output]**: The exact data format or communication protocol for the response.
-*   `&` **[Context]**: **(Optional)** Unified Literal Context. Append raw / compressed detail here.
+### CONSTRAINTS (#)
+```ltl
+#no: [x, y, z]                  // globally forbidden
+#must: [x, y, z]                // globally required
+#per-section: N-paragraph       // structure rule
+#no-repetition: across-sections
+#language: $lang                // output language
+#audience: $audience            // calibrate complexity
+```
 
-### EXTENDED MODIFIERS & PARAMETERS (v2.1.0)
-- **Parameters `(val)`**: Attach highly specific targets directly. (e.g., `@ui(button)`, `!ref(dry,pure)`)
-- **Emphasis `++`**: Force maximum priority for a constraint or action. (e.g., `#perf++`, `#strict++`)
-- **Negation `-`**: Explicit exclusion of domains or rules. (e.g., `-@tests`, `#-comments`)
-- **Pipes `→`**: Strict chronological sequencing of actions. (e.g., `!audit → !ref → !test`)
+### OUTPUT RULES (>)
+```ltl
+>length: [~Nw | ~Nw total | auto]
+>format: $format                // prose / markdown / json / bullet / table / code
+>must-include: [x, y, z]
+>must-exclude: [x, y, z]
+```
 
----
-
-## DICTIONARY: [SCOPES @]
-| Token     | Meaning                          |
-|-----------|----------------------------------|
-| @/src     | Source code context              |
-| @/api     | API endpoints/services           |
-| @/db      | Database schemas/queries         |
-| @/ui      | UI/Frontend components           |
-| @/auth    | Authentication system            |
-| @/infra   | Infrastructure as Code           |
-| @/tests   | Test suites/QA logic             |
-| @terminal | Terminal / Shell                 |
-| @browser  | Browser context                  |
-| @sql      | SQL queries                      |
-| @python   | Python context                   |
-| @react    | React context                    |
-| @next     | Next.js framework                |
-| @docker   | Docker/Container context         |
-| @aws      | AWS cloud services               |
-| @agent    | AI Agent context                 |
-| @logs     | Observability/Telemetry logs     |
-| @edge     | Edge computing/IoT logic         |
-| @llm      | LLM prompt/training context      |
-| @k8s      | Kubernetes orchestration         |
-| @sec      | Security logic/configs           |
-
-## DICTIONARY: [ACTIONS !]
-| Token       | Meaning                                          |
-|-------------|--------------------------------------------------|
-| !ref        | Refactor (DRY, maintainability)                  |
-| !sec        | Security Audit (OWASP, XSS, SQLi)               |
-| !doc        | Document (architecture + API schemas)            |
-| !opt        | Performance optimise (sub-ms / Big-O)            |
-| !test       | Unit/E2E Test generation (100% coverage)         |
-| !act        | Execute technical operational payload            |
-| !reason     | Chain-of-Thought reasoning / analysis            |
-| !solve      | Resolve industrial/technical challenge           |
-| !react      | ReAct: Thought → Action → Observe loop           |
-| !scout      | Professional Scouting Report (SOP-001)           |
-| !extract    | Parse & extract structured data losslessly       |
-| !summarize  | Summarise with zero loss of technical detail     |
-| !translate  | Translate logic to target syntax                 |
-| !audit      | Rigorous compliance/legal audit                  |
-| !scale      | Design 10× scaling strategy                      |
-| !migrate    | Migrate to new paradigm with full parity         |
-| !bench      | Benchmark against industry standards             |
-| !solid      | Pure-SOLID refactoring (SOP-002)                 |
-| !zero       | Zero-Trust Security Verification (SOP-003)       |
-| !debug      | Debugging / Root-Cause Analysis                  |
-| !clean      | Industrial Clean-Up (remove dead code)           |
-
-## DICTIONARY: [PERSONAS %]
-| Token      | Role                         |
-|------------|------------------------------|
-| %SNR       | Senior Expert Engineer       |
-| %ARC       | System Architect             |
-| %ML        | ML Infrastructure Engineer   |
-| %SEC       | Offensive Security Specialist|
-| %AI        | AI Engineer                  |
-| %DBA       | Database Administrator       |
-| %UX        | UX Designer                  |
-| %DATA      | Data Engineer                |
-| %SRE       | Site Reliability Engineer    |
-| %ETHIC     | AI Ethics Specialist         |
-| %TUTOR     | Technical Tutor              |
-| %SCOUT     | Professional Scouting Analyst|
-| %OPS       | DevOps Engineer              |
-| %STAFF     | Staff Engineer               |
-| %CTO       | Strategic Technical Leadership|
-| %VPE       | VP of Engineering            |
-| %WEB3      | Web3 Engineer                |
-| %FINANCE   | Financial Analyst            |
-| %MEDIC     | Physician / Medical Expert   |
-| %PENTESTER | Penetration Tester           |
-
-## DICTIONARY: [CONSTRAINTS #]
-| Token        | Meaning                              |
-|--------------|--------------------------------------|
-| #dry         | Don't-Repeat-Yourself principle      |
-| #min         | Minimal tokens — absolute economy    |
-| #std         | Standard quality baseline            |
-| #fast        | Speed-optimised output               |
-| #safe        | Safety-first / fail-secure           |
-| #typed       | Strict type safety                   |
-| #acc         | Accuracy-critical                    |
-| #perf        | Low-latency / high-performance focus |
-| #solid       | SOLID principles enforced            |
-| #clean       | Clean code standards                 |
-| #tdd         | Test-Driven Development              |
-| #cot         | Chain-of-Thought reasoning required  |
-| #step        | Step-by-step breakdown               |
-| #detailed    | Exhaustive detail                    |
-| #concise     | Brief & concise                      |
-| #professional| Professional tone                    |
-| #atomic      | Atomic / single-responsibility       |
-| #immutable   | Immutable design                     |
-| #async       | Async-first                          |
-| #i18n        | Internationalisation-ready           |
-| #a11y        | Accessibility-compliant              |
-| #ha          | High Availability (99.999%)          |
-| #idempotent  | Pure side-effect-free logic          |
-| #strict      | Zero-tolerance for technical debt    |
-| #narrative   | Narrative / Flowing style            |
-
-## DICTIONARY: [OUTPUTS >]
-| Token     | Format                  |
-|-----------|-------------------------|
-| >md       | Markdown                |
-| >json     | JSON Payload            |
-| >ts       | TypeScript              |
-| >py       | Python                  |
-| >sql      | SQL                     |
-| >yaml     | YAML                    |
-| >html     | HTML                    |
-| >sh       | Shell script            |
-| >go       | Go                      |
-| >mermaid  | Mermaid diagram         |
-| >raw      | Plain text, no formatting|
-| >csv      | CSV                     |
+### SCALES & GRADES (>)
+```ltl
+>scale: [A+ | A | B | C | D]    // select-one grade
+>scale: [1 | 2 | 3 | 4 | 5]
+>scale: $var
+#scale-implicit                 // no inline justification
+#scale-explicit                 // require justification
+```
 
 ---
 
-## PROMPTCOMPRESSOR ENGINE (v2.5.0)
-The Regex-based PromptCompressor applies two passes before the `&` literal context:
+## 3. ADVANCED LOGIC
 
-1. **Filler Removal**: Strips politeness, hedging, and social padding
-   - `"please"`, `"could you"`, `"I'd like you to"`, `"feel free to"`, etc.
+### TEMPLATES (:)
+```ltl
+:template name ($var1, $var2, ...)
+  // full LTL program
+:end
 
-2. **Semantic Substitution**: Replaces verbose phrases with LTL-dense shorthand
-   - `"act as a"` → `Role:`
-   - `"think step-by-step"` → `CoT:`
-   - `"make sure that"` → `CRITICAL:`
-   - `"you are now a"` → `Role:`
+!run name $var1=value           // run with bindings
+!run auto                       // infer best template
+```
 
-Combined token savings: typically **30–97%** depending on verbosity of the original prompt.
+### CONDITIONALS (?)
+```ltl
+?if $var == value  -> !action
+?if $depth >= 3    -> >must-include: [recommendation]
+?else              -> !action
+?elif $var == x    -> !action
+```
+
+### LOOPS (!)
+```ltl
+!foreach @section in >structure -> |>depth:$depth && |#constraint
+!foreach $item in [a, b, c]    -> !action
+!repeat:N -> !refine
+```
+
+### PIPES (->)
+```ltl
+!action -> |filter #constraint -> |format >output
+```
 
 ---
 
-## EXECUTION LOOP
-1. DECODE THE SYMBOLS SILENTLY.
-2. ADOPT THE PERSONA MINDSET IMMEDIATELY.
-3. ADHERE TO ALL CONSTRAINTS RIGIDLY.
-4. INCORPORATE THE `&` CONTEXT LOSSLESSLY.
-5. EXECUTE THE MULTI-PASS CHAIN IN SEQUENCE IF PROVIDED (PIPE `→` DELIMITER).
-6. OUTPUT IN THE SPECIFIED FORMAT. DEFAULT TO `>md` IF UNSPECIFIED.
+## 4. EXECUTION MODES (>>)
+```ltl
+>>draft     // fast, rough
+>>final     // complete and polished
+>>diff      // show delta
+>>stream    // section by section
+>>silent    // reasoning only
+>>compress  // output in LTL syntax
+```
+
+---
+
+## 5. DEBUG & QA (!!)
+```ltl
+!!trace     // show reasoning
+!!tokens    // token count
+!!validate  // check !assert rules
+!!why       // explain logic
+```
+
+---
+
+## 6. AUTO-PARSER PATTERNS
+| NL Pattern | LTL Construct |
+|---|---|
+| "You are a X" | `%"X"` |
+| "Your task is to X" | `!intent + !action` |
+| "For the following X" | `<<text + @subject` |
+| "Do not X" | `#no: [X]` |
+| "In the style of X" | `>>style: "X"` |
+| "Show me then continue" | `>>pause: after @section` |
+| "Check your work" | `!!validate && !refine` |

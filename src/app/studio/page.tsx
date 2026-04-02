@@ -3,17 +3,32 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
 import Navbar from '@/components/Navbar'
 import {
-  LTL_ACTIONS, LTL_PERSONAS, LTL_CONSTRAINTS, LTL_SCOPES, LTL_OUTPUTS,
-  FILLER_PATTERNS, SEMANTIC_PATTERNS,
-  compileLTL, compressLTL, findBestMatchInAtlas, AtlasEntry
+  resolveLTL2, compressToLTL, compileLTL, discoverPatterns
 } from '@/lib/ltl-engine'
 
-export default function LTLStudio() {
+export default function LTLHybridStudio() {
+  const [importInput, setImportInput] = useState(`You are a scouting support analyst. Your task is to create a player report for the following player: Soufiane El Faouzi.
+
+The report MUST follow the exact structure and headings shown below. For each main section, write exactly one coherent paragraph in a narrative scouting style. Do not use statistics, numbers, or bullet points in the descriptions.
+
+Structure:
+- Relevant Player Context: Discuss position, formations, tactical role, and zones.
+- Attacking (+attacking transition): Discuss runs, receiving, touch, passing, and box presence.
+- Defending (+defensive transition): Discuss pressing, duels, tracking, and recovery.
+- Conclusion: Discuss strengths, weaknesses, role-type and Premier League suitability.
+- Grade: Select one grade from [A+, A, B, C, D] with implicit justification.
+
+If the player is Premier League caliber, ensure to emphasize role-type suitability. Use a traditional scout's voice: precise and no filler.`)
   const [input, setInput] = useState('')
   const [copied, setCopied] = useState(false)
-  const [atlasDb, setAtlasDb] = useState<AtlasEntry[]>([])
+  const [atlasDb, setAtlasDb] = useState<any[]>([])
   const [loadingDb, setLoadingDb] = useState(true)
-  const outputRef = useRef<HTMLDivElement>(null)
+  const [validationFailures, setValidationFailures] = useState<string[]>([])
+  
+  const editorRef = useRef<HTMLTextAreaElement>(null)
+  const highlightRef = useRef<HTMLDivElement>(null)
+  const importTextareaRef = useRef<HTMLTextAreaElement>(null)
+  const importHighlightRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     fetch('/ltl-database.json')
@@ -23,22 +38,18 @@ export default function LTLStudio() {
   }, [])
 
   const result = useMemo(() => {
-    if (!input.trim()) return null
-    const compiled = compileLTL(input)
-    const compressed = compressLTL(input)
-    const atlasMatch = atlasDb.length > 0 ? findBestMatchInAtlas(input, atlasDb) : null
+    return resolveLTL2(input)
+  }, [input])
 
-    const origTokens = Math.ceil(input.split(/\s+/).length * 1.35)
-    const ltlTokens  = Math.ceil(compressed.split(/\s+/).length * 1.35)
-    const efficiency = Math.round((1 - ltlTokens / Math.max(1, origTokens)) * 100 * 10) / 10
+  const importResult = useMemo(() => {
+    if (!importInput.trim()) return null
+    return compileLTL(importInput)
+  }, [importInput])
 
-    // Build the unified single-output payload:
-    // LTL <scope> <action> <persona> <constraint> <output> & <regex-compressed literal>
-    const ltlHeader = compiled?.primaryLTL ?? `LTL @agent !act %SNR #std >md`
-    const unifiedOutput = `${ltlHeader} & ${compressed}`
-
-    return { compiled, compressed, atlasMatch, efficiency, origTokens, ltlTokens, ltlHeader, unifiedOutput }
-  }, [input, atlasDb])
+  const suggestions = useMemo(() => {
+    if (!importInput || atlasDb.length === 0) return []
+    return discoverPatterns(importInput, atlasDb)
+  }, [importInput, atlasDb])
 
   const copy = (txt: string) => {
     navigator.clipboard.writeText(txt)
@@ -46,277 +57,259 @@ export default function LTLStudio() {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  // Master command list for cheatsheet
-  const masterCommands = useMemo(() => {
-    const list: { type: string; command: string; description: string }[] = []
-    Object.entries(LTL_ACTIONS).forEach(([k, v])      => list.push({ type: '!action',     command: k, description: v }))
-    Object.entries(LTL_PERSONAS).forEach(([k, v])     => list.push({ type: '%persona',    command: k, description: v }))
-    Object.entries(LTL_SCOPES).forEach(([k, v])       => list.push({ type: '@scope',      command: k, description: v }))
-    Object.entries(LTL_CONSTRAINTS).forEach(([k, v])  => list.push({ type: '#constraint', command: k, description: v }))
-    Object.entries(LTL_OUTPUTS).forEach(([k, v])      => list.push({ type: '>output',     command: k, description: v }))
-    return list.sort((a, b) => a.type.localeCompare(b.type) || a.command.localeCompare(b.command))
-  }, [])
+  const runImport = () => {
+    if (!importInput.trim()) return
+    const ltlCode = compressToLTL(importInput)
+    setInput(ltlCode)
+  }
+
+  const handleScroll = (e: React.UIEvent<HTMLTextAreaElement>, target: React.RefObject<HTMLDivElement | null>) => {
+    if (target.current) {
+      target.current.scrollTop = e.currentTarget.scrollTop
+      target.current.scrollLeft = e.currentTarget.scrollLeft
+    }
+  }
+
+  const highlightLTL = (line: string) => {
+    const rules = [
+      { re: /\/\/.*$/, color: 'text-white/20 italic' },
+      { re: /\$\w+/, color: 'text-cyan-400' },
+      { re: />depth:\d+/, color: 'text-green-400 font-black' },
+      { re: /\?if|\?else|\?elif/, color: 'text-yellow-300 font-bold' },
+      { re: /!foreach|!run/, color: 'text-orange-400' },
+      { re: /:template|:end/, color: 'text-purple-400 font-black' },
+      { re: /!!\w+/, color: 'text-red-500 font-black' },
+      { re: />>\w+/, color: 'text-white font-black' },
+      { re: /@[\w-]+/, color: 'text-cyan-300 font-black' },
+      { re: /![A-Za-z]+:/, color: 'text-purple-400 font-black underline' },
+      { re: /#[^\s]+/, color: 'text-orange-400 font-bold' },
+      { re: />[^\s]+/, color: 'text-green-400 font-bold' },
+      { re: /\[.*\|.*\]/, color: 'text-yellow-200 opacity-60' },
+    ]
+
+    let tokens = line.split(/(\s+)/)
+    return (
+      <>
+        {tokens.map((token, i) => {
+          let color = 'text-white/60'
+          for (const rule of rules) {
+            if (rule.re.test(token)) {
+              color = rule.color
+              break
+            }
+          }
+          return <span key={i} className={color}>{token}</span>
+        })}
+      </>
+    )
+  }
+
+  const highlightNL = useMemo(() => {
+    if (!importInput || !importResult) return importInput
+    const usedWords = importResult.usedWords
+    const tokens = importInput.split(/(\s+)/)
+    
+    return tokens.map((token, i) => {
+      const clean = token.toLowerCase().replace(/[^a-z0-9]/gi, '')
+      if (usedWords.has(clean) || ['you', 'task', 'following', 'player', 'scout', 'attacking', 'defending', 'context', 'report'].includes(clean)) {
+        return <mark key={i} className="bg-white/10 text-white rounded-sm inline-block px-0.5 tracking-tighter">{token}</mark>
+      }
+      return <span key={i} className="opacity-0">{token}</span>
+    })
+  }, [importInput, importResult])
 
   return (
-    <div className="min-h-screen bg-[#020202] text-white flex flex-col pt-12" style={{ fontFamily: "'JetBrains Mono', 'Fira Code', monospace" }}>
+    <div className="min-h-screen bg-[#000000] text-white flex flex-col pt-12 font-mono scrollbar-hide">
       <Navbar />
 
-      {/* ── HEADER ─────────────────────────────────────────────── */}
-      <header className="max-w-7xl mx-auto w-full px-6 pt-14 pb-0">
-        <div className="flex items-end justify-between border-b border-white/10 pb-6">
-          <div>
-            <p className="text-[9px] tracking-[0.35em] text-white/20 uppercase mb-2">
-              LTL — Less Token Language · v2.5 Unified Engine
-            </p>
-            <h1 className="text-5xl font-black tracking-tighter uppercase leading-none">
-              <span className="text-white">LTL</span>
-              <span className="text-white/15">_</span>
-              <span className="text-white">STUDIO</span>
-            </h1>
+      <header className="px-4 pt-12 pb-4 border-b border-white/5 bg-black flex flex-col items-center">
+        <div className="w-full flex flex-col gap-4">
+          <div className="flex justify-between items-center px-4">
+             <div className="flex gap-4 items-center">
+                <span className="text-[11px] font-black tracking-[0.4em] text-white/40 uppercase italic">/ PROMPT_IDE // CORE</span>
+                <div className="h-4 w-px bg-white/10" />
+                <span className="text-[9px] text-white/20 uppercase font-black tracking-widest">{loadingDb ? 'CALIBRATING CORE' : 'ATLAS_ONLINE'}</span>
+                {input && (
+                  <>
+                    <div className="h-4 w-px bg-white/10" />
+                    <span className="text-[10px] bg-green-500/10 text-green-500/80 px-3 py-1 font-black tracking-[0.2em] border border-green-500/20">THRIFT_Gains: +{Math.max(0, Math.round((1 - (Math.ceil(input.split(/\s+/).length * 1.33) / Math.ceil(importInput.split(/\s+/).length * 1.33))) * 100))}%</span>
+                  </>
+                )}
+             </div>
+             <div className="flex gap-6 items-center">
+                <button onClick={() => { setInput(''); setImportInput('') }} className="text-[10px] opacity-20 hover:opacity-100 transition-opacity uppercase tracking-widest font-black">X_WIPE</button>
+                <button 
+                  onClick={runImport}
+                  disabled={!importInput.trim()}
+                  className="px-8 py-2 bg-white text-black text-[10px] font-black uppercase tracking-[0.2em] hover:invert transition-all active:scale-[0.98]"
+                >
+                  INITIALIZE_PROMPT
+                </button>
+             </div>
           </div>
-          <div className="text-right">
-            <div className="text-[9px] tracking-[0.25em] text-white/20 uppercase">
-              {loadingDb ? (
-                <span className="text-yellow-400/60 animate-pulse">SYNCING ATLAS…</span>
-              ) : (
-                <span className="text-green-400/60">{atlasDb.length > 0 ? `${atlasDb.length.toLocaleString()} ATLAS CORES ONLINE` : 'BUILT-IN ENGINE READY'}</span>
-              )}
-            </div>
-            <div className="text-[9px] tracking-[0.15em] text-white/10 uppercase mt-1">
-              REGEX + LTL → UNIFIED OUTPUT
-            </div>
+          
+          <div className="relative flex flex-col border border-white/10 bg-white/[0.01] focus-within:border-white/20 transition-all group overflow-hidden h-[180px]">
+             <div 
+               ref={importHighlightRef}
+               className="absolute inset-0 p-6 pr-4 text-base font-normal whitespace-pre-wrap pointer-events-none overflow-hidden text-transparent select-none leading-relaxed tracking-tight italic"
+             >
+               {highlightNL}
+             </div>
+
+             <textarea 
+               ref={importTextareaRef}
+               value={importInput}
+               onChange={e => setImportInput(e.target.value)}
+               onScroll={(e) => handleScroll(e, importHighlightRef)}
+               placeholder="Drop natural language prompt here to discover LTL shorthands from the Atlas..."
+               className="absolute inset-0 bg-transparent border-none outline-none p-6 pr-4 text-base font-normal text-white/40 placeholder:text-white/5 resize-none leading-relaxed tracking-tight italic overflow-y-auto caret-white"
+               spellCheck={false}
+             />
           </div>
         </div>
       </header>
 
-      {/* ── MAIN GRID ──────────────────────────────────────────── */}
-      <main className="max-w-7xl mx-auto w-full px-6 py-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
-
-        {/* ── LEFT COL: INPUT + OUTPUT ────────────────────────── */}
-        <section className="lg:col-span-8 flex flex-col gap-6">
-
-          {/* INPUT */}
-          <div className="relative group">
-            {loadingDb && (
-              <div className="absolute top-0 left-0 w-full h-[1px] overflow-hidden z-10">
-                <div className="h-full bg-white/60 animate-scan-x" />
-              </div>
-            )}
-            <label className="block text-[9px] tracking-[0.3em] text-white/25 uppercase mb-3">
-              INPUT // NATURAL LANGUAGE PROMPT
-            </label>
-            <textarea
-              id="ltl-input"
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              rows={7}
-              placeholder={"Paste your verbose prompt here. The engine will compress it and map it to LTL symbols in real-time…"}
-              className="w-full bg-black/60 border border-white/10 focus:border-white/40 outline-none resize-none p-5 text-sm text-white/80 placeholder:text-white/10 transition-all duration-200 leading-relaxed"
-            />
-            {input && (
-              <div className="absolute bottom-4 right-4 text-[8px] text-white/15 uppercase tracking-widest">
-                {Math.ceil(input.split(/\s+/).length * 1.35)} TOKENS
-              </div>
-            )}
+      <main className="flex-1 grid grid-cols-1 lg:grid-cols-10 gap-0 overflow-hidden h-[calc(100vh-250px)]">
+        
+        {/* PANEL 1: LTL_SOURCE */}
+        <section className="lg:col-span-4 border-r border-white/5 flex flex-col relative overflow-hidden h-full">
+          <div className="p-2 border-b border-white/5 bg-black flex justify-between items-center px-6">
+            <span className="text-[10px] font-black tracking-widest uppercase text-white/30 italic">LTL_SOURCE</span>
+            <span className="text-[9px] text-white/10 uppercase font-black">{Math.ceil(input.split(/\s+/).length * 1.33)} TK</span>
           </div>
-
-          {/* OUTPUT — combined */}
-          {result && (
-            <div className="flex flex-col gap-0 animate-in fade-in slide-in-from-top-3 duration-400" ref={outputRef}>
-              <label className="text-[9px] tracking-[0.3em] text-white/25 uppercase mb-3">
-                OUTPUT // UNIFIED LTL PAYLOAD
-              </label>
-
-              {/* Main payload box */}
-              <div className="border border-white/20 bg-black relative overflow-hidden group/out">
-                {/* Scan line */}
-                <div className="absolute top-0 left-0 w-full h-[1px] bg-white/5 overflow-hidden pointer-events-none">
-                  <div className="h-full bg-white/30 animate-scan-x" />
-                </div>
-
-                {/* Payload text */}
-                <div className="p-6 pb-4">
-                  {/* LTL semantic header highlighted */}
-                  <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 mb-4">
-                    {/* Decompose the LTL header into tokens for color coding */}
-                    {result.ltlHeader.split(/\s+/).map((tok, i) => {
-                      let color = 'text-white/30'
-                      if (tok === 'LTL')       color = 'text-white font-black'
-                      else if (tok.startsWith('@')) color = 'text-cyan-400 font-bold'
-                      else if (tok.startsWith('!')) color = 'text-purple-400 font-bold'
-                      else if (tok.startsWith('%')) color = 'text-yellow-300 font-bold'
-                      else if (tok.startsWith('#')) color = 'text-orange-400 font-bold'
-                      else if (tok.startsWith('>')) color = 'text-green-400 font-bold'
-                      return (
-                        <span key={i} className={`text-xl md:text-2xl tracking-tight ${color}`}>
-                          {tok}
-                        </span>
-                      )
-                    })}
-                    <span className="text-xl md:text-2xl text-white/20 font-light">&amp;</span>
-                    <span className="text-xl md:text-2xl text-white/50 font-normal italic" style={{ fontFamily: 'inherit' }}>
-                      {result.compressed}
-                    </span>
-                  </div>
-
-                  {/* Token breakdown pills */}
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {result.compiled?.foundTokens && Object.entries(result.compiled.foundTokens).map(([type, tokens]) =>
-                      (tokens as string[]).map(tok => {
-                        let accent = 'border-white/10 text-white/30'
-                        if (type === 'scope')      accent = 'border-cyan-400/30 text-cyan-400/60'
-                        if (type === 'action')     accent = 'border-purple-400/30 text-purple-400/60'
-                        if (type === 'persona')    accent = 'border-yellow-300/30 text-yellow-300/60'
-                        if (type === 'constraint') accent = 'border-orange-400/30 text-orange-400/60'
-                        if (type === 'output')     accent = 'border-green-400/30 text-green-400/60'
-                        return (
-                          <span key={tok} className={`text-[9px] font-bold border px-2 py-0.5 uppercase tracking-wider ${accent}`}>
-                            {tok}
-                          </span>
-                        )
-                      })
-                    )}
-                  </div>
-                </div>
-
-                {/* Stats + Copy bar */}
-                <div className="flex items-center justify-between border-t border-white/10 px-6 py-3 bg-white/[0.02]">
-                  <div className="flex gap-6">
-                    <div>
-                      <div className="text-[8px] text-white/20 uppercase tracking-widest">ORIGINAL</div>
-                      <div className="text-sm font-bold text-white/40">{result.origTokens} <span className="text-[9px] font-normal">TOK</span></div>
-                    </div>
-                    <div>
-                      <div className="text-[8px] text-white/20 uppercase tracking-widest">COMPRESSED</div>
-                      <div className="text-sm font-bold text-white/60">{result.ltlTokens} <span className="text-[9px] font-normal">TOK</span></div>
-                    </div>
-                    <div>
-                      <div className="text-[8px] text-white/20 uppercase tracking-widest">SAVED</div>
-                      <div className={`text-sm font-bold ${result.efficiency > 0 ? 'text-green-400' : 'text-white/30'}`}>
-                        {result.efficiency > 0 ? `−${result.efficiency}%` : '0%'}
-                      </div>
-                    </div>
-                  </div>
-                  <button
-                    id="copy-unified-output"
-                    onClick={() => copy(result.unifiedOutput)}
-                    className="text-[10px] font-bold border border-white/20 text-white/60 px-6 py-2 hover:bg-white hover:text-black hover:border-white transition-all duration-150 uppercase tracking-widest"
-                  >
-                    {copied ? '✓ COPIED' : 'COPY OUTPUT'}
-                  </button>
-                </div>
-              </div>
-
-              {/* Atlas match (if found) */}
-              {result.atlasMatch && (
-                <div className="mt-4 border border-yellow-400/15 bg-black/60 p-5 flex flex-col gap-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-1 h-4 bg-yellow-400/60" />
-                    <span className="text-[9px] text-yellow-400/60 uppercase tracking-[0.25em] font-bold">ATLAS REGISTRY MATCH</span>
-                    <span className="text-[8px] text-white/15 uppercase tracking-widest ml-auto">500K PATTERN INDEX</span>
-                  </div>
-                  <div className="text-base font-bold text-yellow-300 tracking-tight">{result.atlasMatch.command}</div>
-                  <p className="text-[10px] text-white/30 italic leading-relaxed">"{result.atlasMatch.fullInstruction}"</p>
-                  <div className="flex items-center justify-between pt-2 border-t border-white/5">
-                    <span className="text-[9px] text-yellow-400/40 uppercase tracking-widest">
-                      Pre-indexed efficiency: {result.atlasMatch.efficiency}% · saved {result.atlasMatch.standardTokens - result.atlasMatch.ltlTokens} tok
-                    </span>
-                    <button
-                      onClick={() => copy(result.atlasMatch!.command)}
-                      className="text-[9px] border border-yellow-400/20 text-yellow-400/60 px-4 py-1.5 hover:bg-yellow-400/10 transition-all uppercase tracking-widest"
-                    >
-                      COPY ATLAS CMD
-                    </button>
-                  </div>
-                </div>
-              )}
+          
+          <div className="flex-1 relative bg-[#050505] overflow-hidden">
+             <div className="absolute left-6 top-0 w-8 text-right pr-6 py-5 text-[10px] text-white/5 select-none pointer-events-none font-bold">
+              {input.split('\n').map((_, i) => <div key={i} className="h-[24px] leading-[24px]">{i + 1}</div>)}
             </div>
-          )}
 
-          {/* Empty state */}
-          {!result && (
-            <div className="border border-white/5 bg-black/30 p-10 flex flex-col items-center justify-center gap-4 text-center min-h-[200px]">
-              <div className="text-[10px] text-white/10 uppercase tracking-[0.4em]">
-                → Awaiting Input
+            <div className="relative ml-20 py-5 h-full">
+              <div ref={highlightRef} className="absolute inset-0 px-2 pointer-events-none whitespace-pre text-[14px] font-medium leading-[24px] py-5 overflow-hidden">
+                {input.split('\n').map((line, i) => (
+                  <div key={i} className="min-h-[24px] leading-[24px]"> {highlightLTL(line)} </div>
+                ))}
               </div>
-              <p className="text-[10px] text-white/8 max-w-sm leading-loose uppercase tracking-wider">
-                Type or paste any natural language prompt above. The engine will compress it with regex rules and map it to LTL semantic symbols — producing a single unified shorthand payload.
-              </p>
+
+              <textarea
+                ref={editorRef}
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                onScroll={(e) => handleScroll(e, highlightRef)}
+                className="block w-full bg-transparent border-none outline-none resize-none px-2 text-[14px] font-medium leading-[24px] text-transparent caret-white selection:bg-white/10 whitespace-pre overflow-hidden h-full"
+                spellCheck={false}
+              />
             </div>
-          )}
-
-          {/* Syntax legend */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-px bg-white/5 border border-white/5 mt-2">
-            {[
-              { prefix: 'LTL', label: 'Header', color: 'text-white' },
-              { prefix: '@scope', label: 'Context', color: 'text-cyan-400' },
-              { prefix: '!action', label: 'Task', color: 'text-purple-400' },
-              { prefix: '%persona', label: 'Role', color: 'text-yellow-300' },
-              { prefix: '#constraint', label: 'Rule', color: 'text-orange-400' },
-            ].map(({ prefix, label, color }) => (
-              <div key={prefix} className="bg-black px-4 py-3 flex flex-col gap-1">
-                <span className={`text-xs font-bold ${color}`}>{prefix}</span>
-                <span className="text-[9px] text-white/20 uppercase tracking-widest">{label}</span>
-              </div>
-            ))}
           </div>
         </section>
 
-        {/* ── RIGHT COL: CHEATSHEET ───────────────────────────── */}
-        <aside className="lg:col-span-4 flex flex-col">
-          <label className="text-[9px] tracking-[0.3em] text-white/25 uppercase mb-3">
-            CHEATSHEET // CLICK TO INSERT
-          </label>
-          <div className="flex-1 border border-white/10 bg-black flex flex-col" style={{ maxHeight: '80vh' }}>
-            <div className="flex-1 overflow-y-auto py-4" style={{ scrollbarWidth: 'none' }}>
-              {/* Group by type */}
-              {['@scope', '!action', '%persona', '#constraint', '>output'].map(typeKey => {
-                const items = masterCommands.filter(c => c.type === typeKey)
-                const colors: Record<string, string> = {
-                  '@scope': 'text-cyan-400 border-cyan-400/30',
-                  '!action': 'text-purple-400 border-purple-400/30',
-                  '%persona': 'text-yellow-300 border-yellow-300/30',
-                  '#constraint': 'text-orange-400 border-orange-400/30',
-                  '>output': 'text-green-400 border-green-400/30',
-                }
-                const c = colors[typeKey] || 'text-white border-white/20'
-                return (
-                  <div key={typeKey} className="mb-2">
-                    <div className={`px-5 py-2 text-[8px] font-bold uppercase tracking-[0.3em] border-b ${c} opacity-60`}>
-                      {typeKey}
-                    </div>
-                    {items.map((cmd, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setInput(prev => prev + (prev ? ' ' : '') + cmd.command)}
-                        className="w-full text-left px-5 py-2.5 flex items-center justify-between gap-3 hover:bg-white/5 transition-colors group/cmd border-b border-white/[0.03]"
-                      >
-                        <span className={`text-xs font-bold group-hover/cmd:brightness-125 transition-all ${c.split(' ')[0]}`}>
-                          {cmd.command}
-                        </span>
-                        <span className="text-[9px] text-white/20 text-right leading-snug truncate max-w-[160px]">
-                          {cmd.description}
-                        </span>
-                      </button>
-                    ))}
+        {/* RIGHT SIDE CONTAINER */}
+        <section className="lg:col-span-6 flex flex-col h-full overflow-hidden bg-black">
+          <div className="flex-1 grid grid-rows-2 h-full overflow-hidden">
+             
+             <div className="grid grid-cols-2 border-b border-white/5 overflow-hidden">
+                <div className="border-r border-white/5 flex flex-col overflow-hidden bg-black">
+                  <div className="p-2 border-b border-white/5 bg-black text-[10px] font-black tracking-widest uppercase px-6 italic text-white/30">STATE_INSPECTOR</div>
+                  <div className="flex-1 p-5 overflow-y-auto scrollbar-hide">
+                    <table className="w-full text-left text-[11px] border-collapse">
+                      <thead>
+                      <tr className="border-b border-white/10 text-white/10">
+                        <th className="pb-2 font-normal uppercase tracking-widest">NS</th>
+                        <th className="pb-2 font-normal uppercase tracking-widest text-right">BINDING / ENUM</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      {Object.entries(result.variables).map(([key, data]) => (
+                        <tr key={key} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                          <td className="py-2 text-cyan-400 font-black opacity-80">${key}</td>
+                          <td className="py-2 text-right">
+                             {data.enum ? (
+                               <div className="flex gap-2 justify-end">
+                                 {data.enum.map((v, i) => (
+                                   <span key={i} className="text-[9px] bg-white/5 px-2 py-0.5 rounded-full text-white/40 uppercase font-black">{v}</span>
+                                 ))}
+                               </div>
+                             ) : (
+                               <span className="opacity-30 italic font-sans">{data.value}</span>
+                             )}
+                          </td>
+                        </tr>
+                      ))}
+                      {Object.entries(result.agents).map(([name, role]) => (
+                        <tr key={name} className="border-b border-white/5">
+                           <td className="py-2 text-purple-400 font-black">%agent[{name}]</td>
+                           <td className="py-2 text-right opacity-30 italic">{role}</td>
+                        </tr>
+                      ))}
+                      </tbody>
+                    </table>
                   </div>
-                )
-              })}
-            </div>
-            <div className="px-5 py-3 border-t border-white/5 text-[8px] text-white/10 uppercase tracking-widest bg-white/[0.01] text-center">
-              {masterCommands.length} PRIMITIVES · {atlasDb.length > 0 ? '500K ATLAS HOT' : 'ATLAS SYNCING'}
-            </div>
+                </div>
+
+                <div className="flex flex-col overflow-hidden bg-black">
+                  <div className="p-2 border-b border-white/5 bg-black text-[10px] font-black tracking-widest uppercase px-6 italic text-white/30">PATTERN_REGISTRY</div>
+                  <div className="flex-1 p-5 overflow-y-auto scrollbar-hide space-y-4">
+                    {/* Atlas Discoveries */}
+                    {suggestions.length > 0 && (
+                      <div className="space-y-3 mb-6">
+                        <div className="text-[9px] font-black text-white/10 tracking-[0.3em] uppercase underline underline-offset-4">ATLAS_DISCOVERIES</div>
+                        {suggestions.map((s, i) => (
+                          <div key={i} className="px-2 py-1 bg-white/5 border border-white/10 text-white text-[10px] font-black cursor-pointer hover:bg-white/10 transition-all font-mono">
+                            {s}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Sections Visualization */}
+                    {result.sections.length > 0 && (
+                      <div className="space-y-4">
+                         <div className="text-[9px] font-black text-white/10 tracking-[0.3em] uppercase">Structural Sections</div>
+                         {result.sections.map((s, i) => (
+                            <div key={i} className="border-l border-white/10 pl-3 py-1 bg-white/[0.01]">
+                               <div className="flex justify-between items-center mb-1">
+                                  <span className="text-[10px] font-black text-white/60 tracking-tighter uppercase">@{s.name}</span>
+                                  <span className="text-[8px] bg-green-500/10 text-green-500/60 px-1 font-black">D{s.depth || 3}</span>
+                               </div>
+                               <div className="flex flex-wrap gap-1">
+                                  {s.covers?.map((tag, j) => (
+                                    <span key={j} className="text-[8px] text-white/20 hover:text-white/40 cursor-default">#{tag}</span>
+                                  ))}
+                               </div>
+                            </div>
+                         ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+             </div>
+
+             <div className="flex flex-col overflow-hidden bg-[#000000]">
+                <div className="p-2 border-b border-white/5 bg-black flex justify-between items-center px-6">
+                  <span className="text-[10px] font-black tracking-widest uppercase text-white/30 italic">OUTPUT_PREVIEW</span>
+                  <div className="flex items-center gap-6">
+                      <span className="text-[10px] font-black text-white/10 uppercase tracking-widest">{Math.ceil(result.resolved.split(/\s+/).length * 1.33)} TK</span>
+                  </div>
+                </div>
+                <div className="flex-1 p-10 overflow-y-auto whitespace-pre-wrap text-[16px] text-white/50 leading-relaxed font-sans scrollbar-hide selection:bg-white selection:text-black italic">
+                  {result.resolved}
+                </div>
+                <div className="p-5 border-t border-white/5 bg-black flex justify-end">
+                   <button 
+                    onClick={() => copy(result.resolved)}
+                    className="px-16 py-3 bg-white text-black text-[11px] font-black uppercase hover:invert transition-all tracking-[0.4em] active:scale-[0.98]"
+                  >
+                    {copied ? '✓_READY' : 'COPY_INSTRUCTION_SET'}
+                  </button>
+                </div>
+             </div>
           </div>
-        </aside>
+        </section>
       </main>
 
       <style jsx global>{`
-        @keyframes scan-x {
-          0%   { transform: translateX(-100%); }
-          100% { transform: translateX(400%); }
-        }
-        .animate-scan-x { animation: scan-x 2.5s linear infinite; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
+        mark { color: transparent; }
+        textarea { tab-size: 2; }
       `}</style>
     </div>
   )

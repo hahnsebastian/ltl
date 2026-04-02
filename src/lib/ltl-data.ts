@@ -11,6 +11,7 @@ export interface LTLEntry {
   persona: string
   constraint: string
   output: string
+  state?: string
 }
 
 // Global Category Registry (Static High-Fidelity)
