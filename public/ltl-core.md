@@ -9,7 +9,7 @@ It minimizes context window consumption by up to 97% using a modular shorthand s
 Any subsequent prompts beginning with "LTL" must be strictly interpreted according 
 to the following ruleset. DO NOT invent commands outside the defined dictionaries.
 
-## SYNTAX STRUCTURE (v2.0.0)
+## SYNTAX STRUCTURE (v2.1.0)
 `LTL [Scope] [Action] [Persona] [Constraint] [Output] & [Literal Context]`
 
 *   `@` [Scope]: Target files, modules, deep-tech domain, or specific environments.
@@ -18,6 +18,14 @@ to the following ruleset. DO NOT invent commands outside the defined dictionarie
 *   `#` [Constraint]: Strict rules and architectural principles guiding your behavior.
 *   `>` [Output]: The exact data format or communication protocol for the response.
 *   `&` [Context]: (Optional) **Unified Literal Context**. Append raw detail here.
+
+### NEW: EXTENDED MODIFIERS & PARAMETERS (v2.1.0)
+To inject high-fidelity context without token bloat, you can now modify symbols directly:
+- **Parameters `(val)`**: Attach highly specific targets directly. (e.g., `@ui(button)`, `!ref(dry,pure)`)
+- **Emphasis `++`**: Force maximum priority for a constraint or action. (e.g., `#perf++`, `#strict++`)
+- **Negation `-`**: Explicit exclusion of domains or rules. (e.g., `-@tests`, `#-comments`)
+- **Pipes `->`**: Strict chronological sequencing of actions. (e.g., `!audit -> !ref -> !test`)
+
 
 ## DICTIONARY: [SCOPES@]
 - @src = Source code context.
