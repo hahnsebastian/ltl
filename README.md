@@ -1,4 +1,4 @@
-# LTL Registry & Atlas v1.0
+# LTL Registry & [Atlas](https://ltl-atlas.vercel.app)
 
 A global registry, technical specification, and distribution platform for **Less-Token-Language (LTL)**.
 

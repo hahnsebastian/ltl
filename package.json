@@ -1,6 +1,8 @@
 {
   "name": "ltl-registry",
   "version": "1.2.0",
+  "homepage": "https://ltl-atlas.org",
+  "author": "Sebastian Hahn",
   "private": true,
   "engines": {
     "node": ">=20.0.0"

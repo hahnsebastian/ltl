@@ -76,7 +76,7 @@ export function compressToLTL(input: string): CompressionResult {
   };
 
   for (const [key, list] of Object.entries(iMap)) {
-    if (list.some(v => verbs.some(gv => gv.includes(v)))) {
+    if (list.some((v: string) => verbs.some((gv: string) => gv.includes(v)))) {
       intentLine = `!intent: ${key}`;
       break;
     }
@@ -157,7 +157,7 @@ export function compressToLTL(input: string): CompressionResult {
       .filter(t => t.length > 2)
       .slice(0, 8);
 
-    if (tags.length < 3) tags = sDoc.nouns().out('array').map(n => n.toLowerCase().replace(/\s+/g, '-')).slice(0, 5);
+    if (tags.length < 3) tags = sDoc.nouns().out('array').map((n: string) => n.toLowerCase().replace(/\s+/g, '-')).slice(0, 5);
 
     let depth = ">depth: 3";
     const sc = sDoc.sentences().out('array').length;
