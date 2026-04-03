@@ -125,7 +125,7 @@ Do not use generic advice. Always provide code-level optimizations. Avoid mentio
                     {Object.entries(previewAnalysis.variables).map(([k, v]) => (
                       <div key={k} className="flex justify-between items-center mb-2">
                         <span className="text-cyan-400 text-[11px] font-black">${k}</span>
-                        <span className="text-white/20 text-[10px] italic">"{v.value}"</span>
+                        <span className="text-white/20 text-[10px] italic">&quot;{v.value}&quot;</span>
                       </div>
                     ))}
                   </div>

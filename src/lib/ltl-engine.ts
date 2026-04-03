@@ -273,7 +273,7 @@ export function compileLTL(input: string) {
   ];
   for (const { dict, type } of mapping) {
     for (const [key, desc] of Object.entries(dict)) {
-      if (wt.includes(key.toLowerCase()) || desc.toLowerCase().split(/\s+/).some(w => w.length > 4 && wt.includes(w))) {
+      if (wt.includes(key.toLowerCase()) || desc.toLowerCase().split(/\s+/).some((w: string) => w.length > 4 && wt.includes(w))) {
         fT[type].push(key);
         uW.add(key.replace(/[^a-z0-9]/gi, '').toLowerCase());
       }
