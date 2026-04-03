@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet" />
         <link rel="icon" href="/logo.png" />
       </head>
-      <body className="bg-black text-white font-mono antialiased min-h-screen flex flex-col">
+      <body className="bg-black text-white font-mono antialiased min-h-screen flex flex-col" suppressHydrationWarning>
         <div className="scanline-overlay" aria-hidden="true" />
         <div className="flex-1 flex flex-col">
           {children}
