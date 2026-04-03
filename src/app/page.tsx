@@ -19,7 +19,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 z-10 relative">
             <div className="max-w-3xl">
               <h1 className="text-4xl md:text-6xl font-bold tracking-tighter mb-4 uppercase">
-                LTL ATLAS <span className="text-ltl-grey/30 text-xl font-normal lowercase tracking-widest">v1.7.0</span>
+                LTL ATLAS <span className="text-ltl-grey/30 text-xl font-normal lowercase tracking-widest">v2.0.0-PROD</span>
               </h1>
               
               {/* Description - HIGH READABILITY SOLID GREY */}

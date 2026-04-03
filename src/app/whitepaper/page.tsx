@@ -69,7 +69,64 @@ export default function WhitePaper() {
         </section>
 
         <section className="mb-16">
-          <h2 className="text-white uppercase tracking-widest text-lg mb-6 border-l-4 border-white pl-6">03_Dynamic Argument Precision</h2>
+          <h2 className="text-white uppercase tracking-widest text-lg mb-6 border-l-4 border-white pl-6">03_Reference_Protocol_Sigils</h2>
+          <div className="bg-[#0a0a0a] border border-white/10 p-2 overflow-x-auto">
+            <table className="w-full text-left text-[10px] font-mono border-collapse">
+              <thead>
+                <tr className="bg-white/10 text-white uppercase tracking-widest border-b border-white/20">
+                  <th className="p-3">Sigil</th>
+                  <th className="p-3">Function</th>
+                  <th className="p-3">Core Use Case</th>
+                </tr>
+              </thead>
+              <tbody className="text-ltl-grey/80">
+                <tr className="border-b border-white/5 hover:bg-white/[0.02]">
+                  <td className="p-3 text-blue-400 font-bold">@</td>
+                  <td className="p-3 uppercase">Scope</td>
+                  <td className="p-3 uppercase tracking-tighter">Domain/context/section boundary</td>
+                </tr>
+                <tr className="border-b border-white/5 hover:bg-white/[0.02]">
+                  <td className="p-3 text-orange-400 font-bold">!</td>
+                  <td className="p-3 uppercase">Action</td>
+                  <td className="p-3 uppercase tracking-tighter">Imperative operation/intent</td>
+                </tr>
+                <tr className="border-b border-white/5 hover:bg-white/[0.02]">
+                  <td className="p-3 text-purple-400 font-bold">%</td>
+                  <td className="p-3 uppercase">Persona</td>
+                  <td className="p-3 uppercase tracking-tighter">Role, voice, expert agent</td>
+                </tr>
+                <tr className="border-b border-white/5 hover:bg-white/[0.02]">
+                  <td className="p-3 text-red-500 font-bold">#</td>
+                  <td className="p-3 uppercase">Constraint</td>
+                  <td className="p-3 uppercase tracking-tighter">Hard rule — forbidden or required</td>
+                </tr>
+                <tr className="border-b border-white/5 hover:bg-white/[0.02]">
+                  <td className="p-3 text-green-400 font-bold">&gt;</td>
+                  <td className="p-3 uppercase">Output</td>
+                  <td className="p-3 uppercase tracking-tighter">Shape, structure of response</td>
+                </tr>
+                <tr className="border-b border-white/5 hover:bg-white/[0.02]">
+                  <td className="p-3 text-cyan-400 font-bold">$</td>
+                  <td className="p-3 uppercase">Variable</td>
+                  <td className="p-3 uppercase tracking-tighter">Data binding, enum declaration</td>
+                </tr>
+                <tr className="border-b border-white/5 hover:bg-white/[0.02]">
+                  <td className="p-3 text-green-500 font-bold">&amp;</td>
+                  <td className="p-3 uppercase">Context</td>
+                  <td className="p-3 uppercase tracking-tighter">Unified context binding</td>
+                </tr>
+                <tr className="border-b border-white/5 hover:bg-white/[0.02]">
+                  <td className="p-3 text-white font-bold italic">!!</td>
+                  <td className="p-3 uppercase">Debug</td>
+                  <td className="p-3 uppercase tracking-tighter">Trace, validate, explain</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section className="mb-16">
+          <h2 className="text-white uppercase tracking-widest text-lg mb-6 border-l-4 border-white pl-6">04_Dynamic Argument Precision</h2>
           <p className="text-ltl-grey leading-loose mb-6">
             By leveraging the <strong>[Symbol](Literal Value)</strong> syntax, LTL v2.0 targets 
             specific identifiers (Names, Versions, Paths) with surgical precision. 

@@ -27,10 +27,29 @@ LTL is a deterministic prompt programming language designed to maximize semantic
 | `!run` | Execute | Run a named template |
 | `!meta` | Self-ref | LTL operating on itself |
 | `!!` | Debug | Trace, validate, diff, explain |
+| `!assert` | Quality | Validation rule / Quality gate assertion |
+| `&` | Context | Unified Context Operator — binds raw literal data |
 
 ---
 
-## 2. THE PROGRAMMING LAYER
+## 2. LITERAL PRECISION
+To target specific identifiers with zero information loss, use the `[Symbol](Literal)` syntax:
+```ltl
+@subject: [path]("/usr/bin/local")
+$version = [semver]("v2.1.4-beta")
+%persona: [expert](MLOps)
+```
+| Matcher | Description |
+|---|---|
+| `[path]` | File or directory path |
+| `[semver]` | Semantic versioning |
+| `[url]` | Universal Resource Locator |
+| `[id]` | Unique identifier / UUID |
+| `[raw]` | Verbatim string literal |
+
+---
+
+## 3. THE PROGRAMMING LAYER
 
 ### VARIABLES ($)
 ```ltl
