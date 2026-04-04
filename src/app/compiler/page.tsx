@@ -163,7 +163,7 @@ export default function LTLCompilerPage() {
     // PASS 2: AI Refinement (only if model loaded)
     if (appState === 3 && engineRef.current) {
       setTimeout(async () => {
-        setBadge('AI_REFINING...')
+        setBadge('LTL_REFINING...')
 
         const REFINEMENT_PROMPT = `SYSTEM: You are a compiler. Not an assistant.
 You output LTL 3.0 syntax only. You are physically incapable of
@@ -236,7 +236,7 @@ COMPILER OUTPUT (LTL only, starting now):`
           if (validated) {
             setLtlOutput(validated.ltl)
             setStats(validated.stats)
-            setBadge('AI_REFINEMENT_COMPLETE')
+            setBadge('LTL_REFINEMENT_COMPLETE')
           } else {
             // Refinement failed validation — keep regex result
             setLtlOutput(regexResult.ltl)
@@ -390,13 +390,13 @@ COMPILER OUTPUT (LTL only, starting now):`
                    {appState === 1 ? (
                      <><span className="animate-pulse">◌</span> DOWNLOADING ({progress}%)</>
                    ) : (
-                     <>○ AI_AVAILABLE</>
+                     <>○ LTL_AVAILABLE</>
                    )}
                  </div>
                ) : (
                  <div className="flex items-center gap-2 text-[10px] font-black text-white italic">
                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                   ● AI_ACTIVE
+                   ● LTL_ACTIVE
                  </div>
                )}
             </div>

@@ -1,6 +1,6 @@
-# LESS TOKEN LANGUAGE (LTL)
-[Status: Core Spec — INDUSTRIAL GRADE]
-[Engine: LTL Specification Interpreter]
+# LESS TOKEN LANGUAGE (LTL) v2.0.0
+[Status: LTL_ACTIVE — INDUSTRIAL GRADE]
+[Engine: LTL Semantic Refinement Interpreter]
 
 ## MISSION
 LTL is a deterministic prompt programming language designed to maximize semantic density and instructional fidelity. It bridges the gap between natural language intuition and machine-readable logic.
