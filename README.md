@@ -3,12 +3,12 @@
 A global registry, technical specification, and distribution platform for **Less-Token-Language (LTL)**.
 
 ## Core Features
-- **Monochromatic & Brutalist Design**: Built with pure black (#000000) and pure white (#FFFFFF) for high contrast and modern aesthetics.
-- **LTL Logic Core**: Implementation of the `@Scope`, `!Action`, `%Persona`, `#Constraint`, and `>Output` syntax.
-- **Infinite Scrolling Atlas**: Real-time searchable database of 620+ LTL patterns covering React, API, Database, DevOps, and more.
-- **Token Efficiency Tracking**: Visual estimation of token savings (averaging 94%+ compression).
-- **LTL Magic Link**: Direct `ltl-core.md` reference for AI context loading.
-- **FOSS Stack**: 100% Free and Open Source using Next.js, TypeScript, and Tailwind CSS.
+- **LTL Logic Core (v2.0.0)**: Strict implementation of @Scope, !Action, %Persona, #Constraint, and >Output syntax for instructional fidelity.
+- **Runtime Interpreter Engine**: Step-by-step resolution of variables, loops, and conditionals before AI-driven sectioning.
+- **Token Compression Metrics**: Visual estimation of semantic density and token savings (averaging 96%+ efficiency).
+- **Infinite Scrolling Atlas**: High-performance searchable database of 500,000+ LTL patterns (powered by Atlas v2).
+- **LTL Magic Link**: Direct `ltl-core.md` reference for immediate protocol initialization in any AI context.
+- **Modern Performance Stack**: 100% FOSS using Next.js, WebGPU-powered local LLM refinement, and Tailwind CSS.
 
 ## Architecture
 - **Compiler Layer**: Programmatic generation of semantic patterns in `src/lib/ltl-data.ts`.
