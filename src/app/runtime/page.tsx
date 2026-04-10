@@ -99,12 +99,12 @@ $tone = "professional" [professional|casual|technical]
   const canRun = validation?.valid && executionState !== 'running'
 
   return (
-    <div className="min-h-screen bg-black text-zinc-300 font-mono p-8 selection:bg-purple-500/30">
+    <div className="flex-1 flex flex-col p-8 selection:bg-primary/10 bg-background text-foreground">
       <div className="max-w-6xl mx-auto space-y-8">
-        <header className="flex items-center justify-between border-b border-zinc-800 pb-4">
+        <header className="flex items-center justify-between border-b border-black pb-4">
           <div>
-            <h1 className="text-2xl font-bold text-white tracking-tight">LTL / <span className="text-purple-400">RUNTIME</span></h1>
-            <p className="text-xs text-zinc-500 mt-1 uppercase tracking-widest">v2.0.0 Interpreter Engine</p>
+            <h1 className="text-2xl font-bold tracking-tight">LTL / <span className="text-primary font-black uppercase">Runtime</span></h1>
+            <p className="text-xs text-muted-foreground mt-1 font-bold italic">Alpha Interpreter Engine</p>
           </div>
           <div className="flex items-center gap-4">
              <button 
@@ -127,8 +127,8 @@ $tone = "professional" [professional|casual|technical]
             <div className="relative group">
                <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 to-blue-600/20 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
                <div className="relative bg-zinc-900/50 border border-zinc-800 rounded-lg overflow-hidden">
-                <div className="flex items-center justify-between px-4 py-2 bg-zinc-900 border-b border-zinc-800">
-                  <span className="text-[10px] text-zinc-500 uppercase tracking-widest">LTL Source</span>
+                <div className="flex items-center justify-between px-4 py-2 bg-zinc-50 border-b border-black">
+                  <span className="text-[10px] text-black font-bold">LTL Source</span>
                   <div className="flex gap-1">
                     <div className="w-2 h-2 rounded-full bg-red-500/50"></div>
                     <div className="w-2 h-2 rounded-full bg-yellow-500/50"></div>
@@ -145,8 +145,8 @@ $tone = "professional" [professional|casual|technical]
             </div>
 
             {/* Validation Panel */}
-            <div className="bg-zinc-900/30 border border-zinc-800 rounded-lg p-4 space-y-3">
-              <h3 className="text-[10px] text-zinc-500 uppercase tracking-widest px-1">Validation</h3>
+            <div className="bg-white border border-black rounded-lg p-4 space-y-3">
+              <h3 className="text-[10px] text-black font-bold px-1">Validation</h3>
               <div className="space-y-2">
                 {validation?.errors.map((err, i) => (
                   <div key={i} className="p-3 bg-red-950/20 border border-red-900/30 rounded">
@@ -182,9 +182,9 @@ $tone = "professional" [professional|casual|technical]
           {/* Execution & Output */}
           <div className="lg:col-span-5 space-y-6">
              {/* Progress & Log */}
-             <div className="bg-zinc-900 border border-zinc-800 rounded-lg overflow-hidden flex flex-col h-[400px]">
-                <div className="px-4 py-2 border-b border-zinc-800 flex items-center justify-between">
-                  <span className="text-[10px] text-zinc-500 uppercase tracking-widest">Execution Log</span>
+             <div className="bg-white border border-black rounded-lg overflow-hidden flex flex-col h-[400px]">
+                <div className="px-4 py-2 border-b border-black flex items-center justify-between">
+                  <span className="text-[10px] text-black font-bold">Execution log</span>
                   {executionState === 'running' && (
                     <span className="text-[10px] text-purple-400 animate-pulse">{progress}% - {currentSection}</span>
                   )}
@@ -210,16 +210,16 @@ $tone = "professional" [professional|casual|technical]
              </div>
 
              {/* Dynamic Output Canvas */}
-             <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg overflow-hidden flex flex-col h-[480px]">
-                <div className="px-4 py-2 border-b border-zinc-800 flex items-center justify-between">
-                  <span className="text-[10px] text-zinc-500 uppercase tracking-widest">Resulting Output</span>
-                  <button className="text-[10px] text-zinc-600 hover:text-white transition-colors">COPY</button>
+             <div className="bg-white border border-black rounded-lg overflow-hidden flex flex-col h-[480px]">
+                <div className="px-4 py-2 border-b border-black flex items-center justify-between">
+                  <span className="text-[10px] text-black font-bold">Resulting output</span>
+                  <button className="text-[10px] text-black hover:underline transition-colors font-bold">Copy</button>
                 </div>
                 <div className="flex-1 overflow-y-auto p-6 text-sm leading-relaxed prose prose-invert max-w-none">
-                   {Object.entries(sections).map(([heading, content], i) => (
+                    {Object.entries(sections).map(([heading, content], i) => (
                       <div key={i} className="mb-6 last:mb-0">
-                         <h3 className="text-zinc-400 font-bold mb-2 uppercase tracking-wide text-xs border-l-2 border-purple-500 pl-3">{heading}</h3>
-                         <div className="text-zinc-300">{content}</div>
+                         <h3 className="text-black font-bold mb-2 text-xs border-l-2 border-purple-500 pl-3">{heading}</h3>
+                         <div className="text-black">{content}</div>
                       </div>
                    ))}
                    {!Object.keys(sections).length && <div className="text-zinc-700 italic">No output yet. Run the sequence to generate.</div>}

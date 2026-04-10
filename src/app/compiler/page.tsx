@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useRef, useMemo } from 'react'
-import Navbar from '@/components/Navbar'
 import { CreateWebWorkerMLCEngine, InitProgressReport, prebuiltAppConfig } from '@mlc-ai/web-llm'
 import { compressToLTL } from '@/lib/ltl-compiler'
 
@@ -257,7 +256,14 @@ COMPILER OUTPUT (LTL only, starting now):`
 
   const copyResult = () => {
     if (!ltlOutput) return
-    navigator.clipboard.writeText(ltlOutput)
+    
+    // Strip both whole-line and inline comments
+    const cleanLtl = ltlOutput.split('\n')
+      .map(line => line.split('//')[0].trimEnd())
+      .filter(line => line.length > 0)
+      .join('\n')
+
+    navigator.clipboard.writeText(cleanLtl)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
@@ -270,19 +276,19 @@ COMPILER OUTPUT (LTL only, starting now):`
 
       // Line-level coloring
       const trimmed = line.trim()
-      if (trimmed.startsWith('%')) color = 'text-[#c084fc]'               // Persona
-      else if (trimmed.startsWith('@')) color = 'text-[#60a5fa]'          // Scope
-      else if (trimmed.startsWith('$')) color = 'text-[#22d3ee]'          // Variable
-      else if (trimmed.startsWith('!')) color = 'text-[#fb923c]'          // Intent
-      else if (trimmed.startsWith('#')) color = 'text-[#f87171]'          // Constraint
-      else if (trimmed.startsWith('>>')) { color = 'text-white'; bold = true; } // Mode
-      else if (trimmed.startsWith('>')) color = 'text-[#4ade80]'          // Output
-      else if (trimmed.startsWith('//')) { color = 'text-[#52525b]'; italic = true; } // Comment
-      else if (trimmed.startsWith(':')) { color = 'text-[#e879f9]'; bold = true; } // Template
-      else if (trimmed.startsWith('?')) color = 'text-[#fbbf24]'          // Query
-      else if (trimmed.startsWith('~')) color = 'text-[#34d399]'          // State
-      else if (trimmed.startsWith('<<')) { color = 'text-[#22d3ee]'; italic = true; } // Inject
-      else if (trimmed.startsWith('!!')) color = 'text-[#f43f5e]'         // Debug
+      if (trimmed.startsWith('%')) color = 'text-[#9333ea]'               // Persona
+      else if (trimmed.startsWith('@')) color = 'text-[#2563eb]'          // Scope
+      else if (trimmed.startsWith('$')) color = 'text-[#0891b2]'          // Variable
+      else if (trimmed.startsWith('!')) color = 'text-[#ea580c]'          // Intent
+      else if (trimmed.startsWith('#')) color = 'text-[#dc2626]'          // Constraint
+      else if (trimmed.startsWith('>>')) { color = 'text-black'; bold = true; } // Mode
+      else if (trimmed.startsWith('>')) color = 'text-[#16a34a]'          // Output
+      else if (trimmed.startsWith('//')) { color = 'text-[#71717a]'; italic = true; } // Comment
+      else if (trimmed.startsWith(':')) { color = 'text-[#c026d3]'; bold = true; } // Template
+      else if (trimmed.startsWith('?')) color = 'text-[#d97706]'          // Query
+      else if (trimmed.startsWith('~')) color = 'text-[#059669]'          // State
+      else if (trimmed.startsWith('<<')) { color = 'text-[#0891b2]'; italic = true; } // Inject
+      else if (trimmed.startsWith('!!')) color = 'text-[#e11d48]'         // Debug
 
       // Sub-token highlighting (pipes and logical operators)
       const parts = line.split(/(\->|&&|\|)/g)
@@ -300,24 +306,17 @@ COMPILER OUTPUT (LTL only, starting now):`
   }
 
   return (
-    <div className="min-h-screen bg-[#0e0e0e] text-[#e7e5e5] flex flex-col pt-12 font-mono scrollbar-hide selection:bg-white/10">
-      <Navbar />
-
-      <main className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-0 overflow-hidden h-[calc(100vh-48px)]">
+    <div className="flex-1 bg-background text-foreground flex flex-col font-mono scrollbar-hide selection:bg-primary/10 p-4 md:p-8">
+      <main className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-160px)]">
         
         {/* LEFT COLUMN: INPUT */}
-        <section className="lg:col-span-6 border-r border-white/5 flex flex-col bg-[#0e0e0e] relative">
-          <div className="p-4 border-b border-white/5 bg-[#151515] flex justify-between items-center h-12">
-            <span className="text-[10px] font-black uppercase tracking-widest text-white/30 italic">NATURAL_LANGUAGE_INPUT</span>
-            <span className="text-[10px] text-white/10 italic">INPUT: {stats.original}tk</span>
-          </div>
-
+        <section className="flex flex-col bg-white border border-border rounded-md relative overflow-hidden">
           <div className="flex-1 flex flex-col p-8 gap-8">
             <textarea
               value={nlInput}
               onChange={e => setNlInput(e.target.value)}
               placeholder="Paste any English prompt..."
-              className="flex-1 bg-transparent border-none outline-none resize-none text-[15px] leading-relaxed text-white/50 focus:text-white transition-all caret-white placeholder:text-white/10"
+              className="flex-1 bg-transparent border-none outline-none resize-none text-[15px] leading-relaxed text-foreground focus:text-foreground transition-all caret-primary placeholder:text-muted-foreground font-medium"
               spellCheck={false}
               disabled={isCompressing}
             />
@@ -325,41 +324,41 @@ COMPILER OUTPUT (LTL only, starting now):`
             <button
               onClick={handleCompress}
               disabled={isCompressing || !nlInput.trim()}
-              className={`w-full py-5 text-[12px] font-black uppercase tracking-[0.4em] transition-all active:scale-[0.98] select-none
+              className={`w-full py-5 text-[12px] font-sans font-bold transition-all active:scale-[0.98] select-none rounded-md
                 ${(isCompressing || !nlInput.trim()) 
-                  ? 'bg-white/5 text-white/20 cursor-not-allowed' 
-                  : 'bg-[#e7e5e5] text-black hover:bg-white'}`}
+                  ? 'bg-secondary text-muted-foreground cursor-not-allowed border border-border' 
+                  : 'bg-black text-white hover:bg-black/90'}`}
             >
               {isCompressing ? (
                 <span className="flex items-center justify-center gap-2">
-                  WORKING <span className="animate-pulse">_</span>
+                  Working <span className="animate-pulse">_</span>
                 </span>
-              ) : 'COMPRESS'}
+              ) : 'Compress'}
             </button>
           </div>
 
           {/* STATE 1 OVERLAY: FIRST TIME SETUP */}
           {appState === 1 && (
-            <div className="absolute inset-x-8 inset-y-12 bg-black border border-white/10 z-50 flex flex-col p-12 justify-center">
+            <div className="absolute inset-x-8 inset-y-12 bg-background border border-border z-50 flex flex-col p-12 justify-center rounded-md font-sans">
               <div className="space-y-8">
                 <div className="space-y-2">
-                  <h2 className="text-xl font-black tracking-tighter">FIRST_TIME_SETUP</h2>
-                  <p className="text-white/40 text-[13px] leading-relaxed">
-                    LTL downloads once to your browser (~2.3GB).<br />
+                  <h2 className="text-xl font-bold tracking-tight text-foreground">First time setup</h2>
+                  <p className="text-muted-foreground text-[13px] leading-relaxed font-bold">
+                    Ltl downloads once to your browser (~2.3GB).<br />
                     After this, compression refinements load in seconds — offline, forever.
                   </p>
                 </div>
 
                 <div className="space-y-4">
-                  <div className="h-2 w-full bg-white/5 overflow-hidden">
+                  <div className="h-2 w-full bg-secondary overflow-hidden border border-border rounded-full">
                     <div 
-                      className="h-full bg-white transition-all duration-500" 
+                      className="h-full bg-primary transition-all duration-500" 
                       style={{ width: `${progress}%` }} 
                     />
                   </div>
-                  <div className="flex justify-between text-[11px] font-black font-mono">
-                     <span className="text-white">{progress}% — {mbRemaining}MB remaining</span>
-                     <span className="text-white/30">{timeRemaining}</span>
+                  <div className="flex justify-between text-[11px] font-bold font-mono">
+                     <span className="text-muted-foreground">{progress}% — {mbRemaining}MB remaining</span>
+                     <span className="text-foreground font-bold">{timeRemaining}</span>
                   </div>
                 </div>
               </div>
@@ -368,65 +367,26 @@ COMPILER OUTPUT (LTL only, starting now):`
         </section>
 
         {/* RIGHT COLUMN: OUTPUT */}
-        <section className="lg:col-span-6 flex flex-col bg-[#111111] relative">
-          <div className="p-4 border-b border-white/5 bg-[#1a1a1a] flex justify-between items-center h-12">
-            <span className="text-[10px] font-black uppercase tracking-widest text-white/30 italic">LTL_OUTPUT</span>
-            
-            <div className="flex items-center gap-4">
-               {badge && (
-                 <span className="text-[9px] font-black px-2 py-0.5 bg-white/10 text-white leading-none flex items-center h-5">
-                   {badge}
-                 </span>
-               )}
-
-               <div className="h-4 w-px bg-white/10" />
-
-               {webGPUAvailable === false ? (
-                 <div className="flex items-center gap-2 text-[10px] font-black text-white/20 italic">
-                   ○ BASIC_MODE
-                 </div>
-               ) : appState < 3 ? (
-                 <div className="flex items-center gap-2 text-[10px] font-black text-blue-400 italic">
-                   {appState === 1 ? (
-                     <><span className="animate-pulse">◌</span> DOWNLOADING ({progress}%)</>
-                   ) : (
-                     <>○ LTL_AVAILABLE</>
-                   )}
-                 </div>
-               ) : (
-                 <div className="flex items-center gap-2 text-[10px] font-black text-white italic">
-                   <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                   ● LTL_ACTIVE
-                 </div>
-               )}
-            </div>
-          </div>
-          
-          <div className="flex-1 relative group overflow-hidden bg-[#0d0d0d]">
-            <div className="absolute inset-0 p-8 overflow-y-auto whitespace-pre font-mono text-[14px] leading-[22px]">
+        <section className="flex flex-col bg-secondary border border-border rounded-md relative overflow-hidden">
+          <div className="flex-1 relative group overflow-hidden">
+            <div className="absolute inset-0 p-8 overflow-y-auto whitespace-pre font-mono text-[14px] leading-[22px] text-foreground">
               {ltlOutput ? highlightLTL(ltlOutput) : (
-                <div className="text-white/5 italic select-none">
-                  READY_FOR_COMPRESSION_SEQUENCE...
+                <div className="text-muted-foreground/60 select-none font-normal text-sm">
+                  Ready for compression...
                 </div>
               )}
             </div>
 
             {ltlOutput && !isCompressing && (
-              <div className="absolute bottom-8 right-8 flex flex-col items-end gap-6 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="absolute bottom-8 right-8 flex flex-col items-end gap-6 transition-all">
                 <button
                   onClick={copyResult}
-                  className="px-12 py-3 bg-white/5 text-white text-[11px] font-black uppercase border border-white/10 hover:bg-white/10 transition-all tracking-widest"
+                  className="px-10 py-3 bg-black text-white text-[11px] font-sans font-bold border border-black hover:bg-black/90 transition-all rounded-md"
                 >
-                  {copied ? 'COPIED' : 'COPY_LTL'}
+                  {copied ? 'Copied' : 'COPY LTL'}
                 </button>
               </div>
             )}
-          </div>
-
-          <div className="h-16 border-t border-white/5 bg-[#151515] flex items-center px-8 justify-between">
-             <div className="text-[10px] font-black uppercase tracking-widest text-white/30 italic">
-                INPUT: {stats.original}tk → LTL: {stats.compressed}tk → SAVED: {stats.saved}%
-             </div>
           </div>
         </section>
       </main>

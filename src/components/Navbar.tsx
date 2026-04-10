@@ -8,42 +8,44 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-black border-b border-white">
-      <div className="max-w-screen-2xl mx-auto px-4 flex items-center justify-between h-12">
+    <nav className="fixed top-0 left-0 right-0 z-[100] bg-white">
+      <div className="max-w-screen-2xl mx-auto px-4 md:px-8 flex items-center justify-between h-12">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 hover:no-underline group h-8">
-          <Image src="/logo.png" alt="LTL Logo" width={24} height={24} className="object-contain filter invert" />
-          <span className="text-xs tracking-widest uppercase text-white font-bold ml-1 hidden sm:inline">
+          <Image src="/logo.png" alt="LTL Logo" width={24} height={24} className="object-contain" />
+          <span className="text-sm text-foreground font-normal ml-1 hidden sm:inline group-hover:underline">
             Less-Token-Language
           </span>
-          <span className="text-xs text-white/30 hidden md:inline">v2.0.0-PROD</span>
+          <span className="text-sm text-muted-foreground hidden md:inline font-normal">Alpha</span>
         </Link>
 
         {/* Nav links */}
-        <div className="hidden md:flex items-center text-xs tracking-wider h-full">
+        <div className="hidden md:flex items-center text-sm h-full gap-8">
           {[
-            { href: '/', label: 'ATLAS' },
-            { href: '/compiler', label: 'COMPILER' },
-            { href: '/whitepaper', label: 'WHITE PAPER' },
-            { href: '/ltl-core.md', label: 'LTL CORE' },
-            { href: 'https://github.com/hahnsebastian/ltl', label: 'GITHUB', external: true },
-          ].map(link => (
-            <Link
-              key={link.label}
-              href={link.href}
-              target={link.external ? '_blank' : undefined}
-              rel={link.external ? 'noopener noreferrer' : undefined}
-              className="px-4 h-12 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/5 transition-colors border-r border-white/10 last:border-r-0 font-bold"
-            >
-              {link.label}
-            </Link>
-          ))}
+            { href: '/atlas', label: 'Atlas' },
+            { href: '/compiler', label: 'Compiler' },
+            { href: 'https://github.com/hahnsebastian/ltl/releases/tag/LTL_SYNTAX', label: 'Syntax' },
+            { href: 'https://github.com/hahnsebastian/ltl', label: 'GitHub' },
+          ].map(link => {
+            const isExternal = link.href.startsWith('http');
+            return (
+              <Link
+                key={link.label}
+                href={link.href}
+                target={isExternal ? '_blank' : undefined}
+                rel={isExternal ? 'noopener noreferrer' : undefined}
+                className="flex items-center justify-center text-foreground hover:underline transition-all font-normal"
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </div>
 
         {/* Mobile menu toggle */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden btn py-1.5 px-3 text-xs"
+          className="md:hidden py-1.5 px-3 text-xs font-bold text-foreground"
           aria-label="Toggle menu"
         >
           {menuOpen ? '✕' : '☰'}
@@ -52,23 +54,27 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden border-t border-white bg-black">
+        <div className="md:hidden bg-background border-t border-border">
           {[
-            { href: '/', label: 'ATLAS' },
-            { href: '/compiler', label: 'COMPILER' },
-            { href: '/whitepaper', label: 'WHITE PAPER' },
-            { href: '/ltl-core.md', label: 'LTL CORE' },
-            { href: 'https://github.com/hahnsebastian/ltl', label: 'GITHUB' },
-          ].map(link => (
-            <Link
-              key={link.label}
-              href={link.href}
-              onClick={() => setMenuOpen(false)}
-              className="block px-4 py-3 text-xs tracking-wider border-b border-white/10 hover:bg-white/5"
-            >
-              {link.label}
-            </Link>
-          ))}
+            { href: '/atlas', label: 'Atlas' },
+            { href: '/compiler', label: 'Compiler' },
+            { href: 'https://github.com/hahnsebastian/ltl/releases/tag/LTL_SYNTAX', label: 'Syntax' },
+            { href: 'https://github.com/hahnsebastian/ltl', label: 'GitHub' },
+          ].map(link => {
+            const isExternal = link.href.startsWith('http');
+            return (
+              <Link
+                key={link.label}
+                href={link.href}
+                target={isExternal ? '_blank' : undefined}
+                rel={isExternal ? 'noopener noreferrer' : undefined}
+                onClick={() => setMenuOpen(false)}
+                className="block px-4 py-4 text-xs hover:underline font-bold text-foreground"
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </div>
       )}
     </nav>

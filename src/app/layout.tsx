@@ -1,17 +1,11 @@
 import type { Metadata } from 'next'
-import { JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import Footer from '@/components/Footer'
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  weight: ['400', '600', '700', '800'],
-  display: 'swap',
-  variable: '--font-jetbrains-mono',
-})
+import Navbar from '@/components/Navbar'
+import CookieBanner from '@/components/CookieBanner'
 
 export const metadata: Metadata = {
-  title: 'LTL Registry — Less-Token-Language v2.0.0 Global Specification',
+  title: 'LTL Registry — Less-Token-Language Alpha Global Specification',
   description: 'The official registry for LTL rule sets. Compress AI prompts by up to 97%.',
   keywords: ['LTL', 'Less-Token-Language', 'AI prompts', 'token compression'],
   icons: {
@@ -21,10 +15,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={jetbrainsMono.variable}>
-      <body className="bg-black text-white font-mono antialiased min-h-screen flex flex-col" suppressHydrationWarning>
-        <div className="scanline-overlay" aria-hidden="true" />
-        <div className="flex-1 flex flex-col">
+    <html lang="en">
+      <body className="bg-white text-black antialiased min-h-screen flex flex-col" suppressHydrationWarning>
+        <CookieBanner />
+        <Navbar />
+        <div className="flex-1 flex flex-col pt-12">
           {children}
         </div>
         <Footer />

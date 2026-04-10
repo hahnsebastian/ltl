@@ -69,18 +69,18 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center h-[600px] w-full text-ltl-grey/30 p-8 border border-white/5 animate-pulse">
-        <span className="text-xl mb-2 tracking-[0.4em] uppercase">SYNCING_GLOBAL_CORE...</span>
-        <span className="text-xs tracking-widest uppercase">SYNCHRONIZING_500000_PATTERNS_INSTANT</span>
+      <div className="flex flex-col items-center justify-center h-[600px] w-full text-foreground p-8 border border-border animate-pulse bg-secondary rounded-md">
+        <span className="text-xl mb-2 tracking-tight">Syncing global core...</span>
+        <span className="text-xs tracking-tight">Synchronizing 500,000 patterns instant</span>
       </div>
     )
   }
 
   if (filteredData.length === 0 && !loading) {
     return (
-      <div className="flex flex-col items-center justify-center h-[600px] w-full text-ltl-grey/30 p-8 border border-dashed border-white/5">
-        <span className="text-xl mb-2 tracking-widest uppercase">ZERO_RESULTS</span>
-        <span className="text-xs uppercase">ADJUST_QUERY</span>
+      <div className="flex flex-col items-center justify-center h-[600px] w-full text-foreground p-8 border border-dashed border-border rounded-md bg-secondary">
+        <span className="text-xl mb-2 tracking-tight">Zero results</span>
+        <span className="text-xs">Adjust query</span>
       </div>
     )
   }
@@ -91,39 +91,39 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
     if (!item) return null
 
     return (
-      <div style={style} className="border-b border-white/[0.05] hover:bg-white/[0.02] transition-colors group">
+      <div style={style} className="border-b border-border hover:bg-secondary transition-colors group">
         <div className="grid grid-cols-[80px_1.5fr_2fr_120px_100px_80px] w-full h-full items-stretch text-[11px]">
-          <div className="px-2 py-3 font-mono flex items-center justify-center border-r border-white/10 text-ltl-grey/50">
+          <div className="px-2 py-3 font-mono flex items-center justify-center border-r border-border text-foreground">
             {index + 1}
           </div>
-          <div className="px-4 py-3 font-mono flex items-center border-r border-white/10 whitespace-nowrap overflow-hidden">
-            <span className="text-ltl-grey/40 mr-2 shrink-0">LTL</span>
+          <div className="px-4 py-3 font-mono flex items-center border-r border-border whitespace-nowrap overflow-hidden">
+            <span className="text-muted-foreground mr-2 shrink-0">Ltl</span>
             <div className="flex items-center overflow-hidden">
-                <span className="text-blue-400/90">{item.scope}</span>
-                <span className="mx-1 text-red-400/90">{item.action}</span>
-                <span className="text-green-400/90">{item.persona}</span>
-                <span className="mx-1 text-yellow-400/90">{item.constraint}</span>
-                <span className="text-purple-400/90">{item.output}</span>
+                <span className="text-blue-600 font-bold">{item.scope}</span>
+                <span className="mx-1 text-red-600 font-bold">{item.action}</span>
+                <span className="text-green-600 font-bold">{item.persona}</span>
+                <span className="mx-1 text-yellow-600 font-bold">{item.constraint}</span>
+                <span className="text-purple-600 font-bold">{item.output}</span>
             </div>
           </div>
           
-          <div className="px-4 py-3 text-ltl-grey leading-relaxed border-r border-white/10 flex items-center italic overflow-hidden">
+          <div className="px-4 py-3 text-foreground leading-relaxed border-r border-border flex items-center italic overflow-hidden">
             <span className="truncate">{item.fullInstruction}</span>
           </div>
 
-          <div className="px-4 py-3 text-right flex items-center justify-end font-mono border-r border-white/10">
-            <span className="line-through mr-2 text-ltl-grey/20 text-[9px]">{item.standardTokens}</span>
-            <span className="text-white/90 font-bold">{item.ltlTokens}</span>
+          <div className="px-4 py-3 text-right flex items-center justify-end font-mono border-r border-border">
+            <span className="line-through mr-2 text-muted-foreground text-[9px]">{item.standardTokens}</span>
+            <span className="text-foreground font-bold">{item.ltlTokens}</span>
           </div>
-          <div className="px-4 py-3 text-right flex items-center justify-end border-r border-white/10">
-            <span className="text-ltl-grey font-medium tracking-tighter">{item.efficiency}%</span>
+          <div className="px-4 py-3 text-right flex items-center justify-end border-r border-border">
+            <span className="text-foreground font-bold tracking-tighter">{item.efficiency}%</span>
           </div>
           <div className="px-4 py-3 text-right flex items-center justify-end">
             <button 
-              className="text-[8px] border border-white/20 px-2 py-1 hover:bg-white hover:text-black hover:border-white transition-all opacity-0 group-hover:opacity-100 uppercase font-bold tracking-widest text-white/70"
+              className="text-[8px] bg-primary text-primary-foreground px-2 py-1 hover:bg-primary/90 transition-all opacity-0 group-hover:opacity-100 font-bold rounded"
               onClick={() => navigator.clipboard.writeText(item.command)}
             >
-              COPY
+              Copy
             </button>
           </div>
         </div>
@@ -132,18 +132,18 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
   }
 
   return (
-    <div className="w-full flex flex-col bg-black overflow-hidden select-none border border-white/5">
+    <div className="w-full flex flex-col bg-white overflow-hidden select-none border border-border rounded-md">
       <div className="overflow-x-auto w-full scrollbar-hide">
         <div className="min-w-[800px] flex flex-col w-full">
           {/* Table Header */}
-          <div className="h-10 border-b border-white/30 z-20 flex text-[9px] font-bold tracking-[0.2em] text-white uppercase bg-black">
+          <div className="h-10 border-b border-border z-20 flex text-xs font-sans font-bold text-muted-foreground bg-secondary">
             <div className="grid grid-cols-[80px_1.5fr_2fr_120px_100px_80px] w-full h-full items-center">
-              <div className="px-2 border-r border-white/10 h-full flex items-center justify-center">ID</div>
-              <div className="px-4 border-r border-white/10 h-full flex items-center">LTL_COMMAND</div>
-              <div className="px-4 border-r border-white/10 h-full flex items-center">INSTRUCTION_SET</div>
-              <div className="px-4 border-r border-white/10 h-full flex items-center text-right justify-end">TOK_SAVED</div>
-              <div className="px-4 border-r border-white/10 h-full flex items-center text-right justify-end">EFF_RATIO</div>
-              <div className="px-4 h-full flex items-center text-right justify-end">ACTION</div>
+              <div className="px-2 border-r border-border h-full flex items-center justify-center">Id</div>
+              <div className="px-4 border-r border-border h-full flex items-center">LTL command</div>
+              <div className="px-4 border-r border-border h-full flex items-center">Instruction set</div>
+              <div className="px-4 border-r border-border h-full flex items-center text-right justify-end">Tok saved</div>
+              <div className="px-4 border-r border-border h-full flex items-center text-right justify-end">Eff ratio</div>
+              <div className="px-4 h-full flex items-center text-right justify-end">Action</div>
             </div>
           </div>
 
@@ -168,9 +168,9 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
       </div>
 
       {/* Simple Status */}
-      <div className="h-6 flex justify-between items-center px-4 text-[7px] text-ltl-grey/40 tracking-[0.25em] font-mono select-none bg-black border-t border-white/5">
-        <div>REGISTRY_v1.5.1: {database.length} {'//'} ALL_RECORDS_ACTIVE: {filteredData.length} {'//'} LATENCY: 0.1ms</div>
-        <div className="animate-pulse opacity-50 uppercase">DATA_VIRTUALIZATION_500K_STABLE</div>
+      <div className="h-6 flex justify-between items-center px-4 text-[7px] text-muted-foreground font-mono select-none bg-secondary border-t border-border">
+        <div>Registry Alpha: {database.length} {'//'} All records active: {filteredData.length} {'//'} Latency: 0.1ms</div>
+        <div className="animate-pulse opacity-50">Data virtualization 500k stable</div>
       </div>
     </div>
   )
