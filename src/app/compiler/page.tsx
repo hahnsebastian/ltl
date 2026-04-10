@@ -367,7 +367,7 @@ COMPILER OUTPUT (LTL only, starting now):`
         </section>
 
         {/* RIGHT COLUMN: OUTPUT */}
-        <section className="flex flex-col bg-secondary border border-border rounded-md relative overflow-hidden group">
+        <section className="flex flex-col bg-white border border-border rounded-md relative overflow-hidden group">
           <div className="flex-1 relative overflow-hidden">
             <div className="absolute inset-0 p-8 overflow-y-auto whitespace-pre font-mono text-[14px] leading-[22px] text-foreground scrollbar-hide">
               {ltlOutput ? highlightLTL(ltlOutput) : (

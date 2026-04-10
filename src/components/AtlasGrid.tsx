@@ -69,7 +69,7 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center h-[600px] w-full text-foreground p-8 border border-border animate-pulse bg-secondary rounded-md">
+      <div className="flex flex-col items-center justify-center h-[600px] w-full text-foreground p-8 border border-border animate-pulse bg-white rounded-md">
         <span className="text-xl mb-2 tracking-tight">Syncing global core...</span>
         <span className="text-xs tracking-tight">Synchronizing 500,000 patterns instant</span>
       </div>
@@ -78,7 +78,7 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
 
   if (filteredData.length === 0 && !loading) {
     return (
-      <div className="flex flex-col items-center justify-center h-[600px] w-full text-foreground p-8 border border-dashed border-border rounded-md bg-secondary">
+      <div className="flex flex-col items-center justify-center h-[600px] w-full text-foreground p-8 border border-dashed border-border rounded-md bg-white">
         <span className="text-xl mb-2 tracking-tight">Zero results</span>
         <span className="text-xs">Adjust query</span>
       </div>
@@ -136,7 +136,7 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
       <div className="overflow-x-auto w-full scrollbar-hide">
         <div className="min-w-[800px] flex flex-col w-full">
           {/* Table Header */}
-          <div className="h-10 border-b border-border z-20 flex text-xs font-sans font-bold text-muted-foreground bg-secondary">
+          <div className="h-10 border-b border-border z-20 flex text-xs font-sans font-bold text-muted-foreground bg-white">
             <div className="grid grid-cols-[80px_1.5fr_2fr_120px_100px_80px] w-full h-full items-center">
               <div className="px-2 border-r border-border h-full flex items-center justify-center">Id</div>
               <div className="px-4 border-r border-border h-full flex items-center">LTL command</div>
@@ -168,7 +168,7 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
       </div>
 
       {/* Simple Status */}
-      <div className="h-6 flex justify-between items-center px-4 text-[7px] text-muted-foreground font-mono select-none bg-secondary border-t border-border">
+      <div className="h-6 flex justify-between items-center px-4 text-[7px] text-muted-foreground font-mono select-none bg-white border-t border-border">
         <div>Registry Alpha: {database.length} {'//'} All records active: {filteredData.length} {'//'} Latency: 0.1ms</div>
         <div className="animate-pulse opacity-50">Data virtualization 500k stable</div>
       </div>

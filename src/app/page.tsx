@@ -29,7 +29,7 @@ export default function Home() {
         {/* Install Command */}
         <div className="w-full flex flex-col items-center gap-3">
           <div
-            className="flex items-center gap-3 bg-secondary border border-border rounded-md px-5 py-4 w-full group cursor-pointer hover:border-foreground transition-all"
+            className="flex items-center gap-3 bg-white border border-border rounded-md px-5 py-4 w-full group cursor-pointer hover:border-foreground transition-all shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
             onClick={handleCopy}
           >
             <span className="text-muted-foreground select-none font-mono text-sm">$</span>
