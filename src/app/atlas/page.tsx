@@ -20,7 +20,7 @@ export default function Home() {
               </h1>
             </div>
 
-            <div className="flex gap-10 font-sans text-xs bg-secondary p-6 border border-border rounded-md backdrop-blur-sm group hover:border-foreground transition-all">
+            <div className="flex gap-10 font-sans text-xs bg-white p-6 border border-border rounded-md backdrop-blur-sm group hover:border-foreground transition-all">
               <div className="flex flex-col items-end">
                 <span className="text-muted-foreground mb-1 group-hover:text-foreground transition-colors font-bold uppercase tracking-tight">Compression Ratio</span>
                 <span className="text-3xl font-bold text-foreground tracking-tighter">96.8%</span>
