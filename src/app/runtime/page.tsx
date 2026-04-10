@@ -103,14 +103,14 @@ $tone = "professional" [professional|casual|technical]
       <div className="max-w-6xl mx-auto space-y-8">
         <header className="flex items-center justify-between border-b border-black pb-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">LTL / <span className="text-primary font-black uppercase">Runtime</span></h1>
+              <h1 className="text-2xl font-bold tracking-tight">LTL / <span className="text-primary font-black uppercase">Runtime</span></h1>
             <p className="text-xs text-muted-foreground mt-1 font-bold italic">Alpha Interpreter Engine</p>
           </div>
           <div className="flex items-center gap-4">
              <button 
               onClick={handleRun}
               disabled={!canRun}
-              className={`px-6 py-2 rounded text-xs font-bold transition-all ${
+              className={`px-6 py-2 rounded text-sm font-bold transition-all ${
                 canRun 
                   ? 'bg-purple-600 text-white hover:bg-purple-500 shadow-[0_0_20px_rgba(168,85,247,0.4)]' 
                   : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
@@ -128,7 +128,7 @@ $tone = "professional" [professional|casual|technical]
                <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/20 to-blue-600/20 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
                <div className="relative bg-zinc-900/50 border border-zinc-800 rounded-lg overflow-hidden">
                 <div className="flex items-center justify-between px-4 py-2 bg-zinc-50 border-b border-black">
-                  <span className="text-[10px] text-black font-bold">LTL Source</span>
+                  <span className="text-xs text-black font-bold">LTL Source</span>
                   <div className="flex gap-1">
                     <div className="w-2 h-2 rounded-full bg-red-500/50"></div>
                     <div className="w-2 h-2 rounded-full bg-yellow-500/50"></div>
@@ -146,7 +146,7 @@ $tone = "professional" [professional|casual|technical]
 
             {/* Validation Panel */}
             <div className="bg-white border border-black rounded-lg p-4 space-y-3">
-              <h3 className="text-[10px] text-black font-bold px-1">Validation</h3>
+              <h3 className="text-xs text-black font-bold px-1">Validation</h3>3>
               <div className="space-y-2">
                 {validation?.errors.map((err, i) => (
                   <div key={i} className="p-3 bg-red-950/20 border border-red-900/30 rounded">

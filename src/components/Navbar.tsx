@@ -54,7 +54,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden bg-background border-t border-border">
+        <div className="md:hidden bg-white border-t border-border animate-in slide-in-from-top-4 duration-300">
           {[
             { href: '/atlas', label: 'Atlas' },
             { href: '/compiler', label: 'Compiler' },
@@ -69,7 +69,7 @@ export default function Navbar() {
                 target={isExternal ? '_blank' : undefined}
                 rel={isExternal ? 'noopener noreferrer' : undefined}
                 onClick={() => setMenuOpen(false)}
-                className="block px-4 py-4 text-xs hover:underline font-bold text-foreground"
+                className="block px-8 py-6 text-lg hover:bg-secondary transition-all font-bold text-foreground border-b border-border/50 last:border-none"
               >
                 {link.label}
               </Link>

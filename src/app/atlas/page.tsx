@@ -15,7 +15,7 @@ export default function Home() {
         <div className="pt-8 pb-4 flex flex-col gap-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 z-10 relative">
             <div className="max-w-3xl">
-              <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-4">
+              <h1 className="text-3xl md:text-6xl font-bold tracking-tight mb-4">
                 LTL Atlas
               </h1>
             </div>
@@ -45,7 +45,7 @@ export default function Home() {
               placeholder="Search vocabulary..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full bg-white appearance-none border-none px-10 py-3 text-xs font-sans rounded-md focus:outline-none focus:ring-1 focus:ring-foreground/5 transition-all placeholder:text-muted-foreground text-foreground border border-border"
+              className="w-full bg-white appearance-none border-none px-10 py-3 text-sm font-sans rounded-md focus:outline-none focus:ring-1 focus:ring-foreground/5 transition-all placeholder:text-muted-foreground text-foreground border border-border"
             />
             {searchQuery && (
               <button
@@ -61,7 +61,7 @@ export default function Home() {
           <div className="flex flex-wrap gap-2 pt-1 transition-all">
             <button
               onClick={() => setActiveCategory(null)}
-              className={`px-3 py-1.5 text-xs font-sans font-normal transition-all rounded-md border border-border ${!activeCategory ? 'bg-black text-white' : 'bg-white text-muted-foreground hover:text-foreground hover:bg-secondary/80'}`}
+              className={`px-3 py-1.5 text-sm font-sans font-normal transition-all rounded-md border border-border ${!activeCategory ? 'bg-black text-white' : 'bg-white text-muted-foreground hover:text-foreground hover:bg-secondary/80'}`}
             >
               All
             </button>
@@ -69,7 +69,7 @@ export default function Home() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat === activeCategory ? null : cat)}
-                className={`px-3 py-1.5 text-xs font-sans font-normal transition-all rounded-md border border-border ${activeCategory === cat ? 'bg-black text-white' : 'bg-white text-muted-foreground hover:text-foreground hover:bg-secondary/80'}`}
+                className={`px-3 py-1.5 text-sm font-sans font-normal transition-all rounded-md border border-border ${activeCategory === cat ? 'bg-black text-white' : 'bg-white text-muted-foreground hover:text-foreground hover:bg-secondary/80'}`}
               >
                 {cat}
               </button>

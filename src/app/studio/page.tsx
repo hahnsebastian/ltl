@@ -61,7 +61,7 @@ Do not use generic advice. Always provide code-level optimizations. Avoid mentio
         {/* LEFT: COMPRESSOR_INPUT */}
         <section className="lg:col-span-6 border-r border-border flex flex-col bg-background">
           <div className="p-4 border-b border-border bg-secondary flex justify-between items-center h-12">
-            <span className="text-[10px] font-bold text-muted-foreground italic">Nl compressor input</span>
+            <span className="text-xs font-bold text-muted-foreground italic">Nl compressor input</span>
             <span className="text-[10px] text-muted-foreground italic font-bold">{nlInput.length} chars</span>
           </div>
           <div className="flex-1 flex flex-col p-8 gap-8">
@@ -74,7 +74,7 @@ Do not use generic advice. Always provide code-level optimizations. Avoid mentio
             />
             <button
               onClick={handleCompress}
-              className="w-full py-5 bg-primary text-primary-foreground text-[12px] font-black hover:bg-primary/90 transition-all active:scale-[0.98] select-none rounded-md"
+              className="w-full py-5 bg-primary text-primary-foreground text-sm font-black hover:bg-primary/90 transition-all active:scale-[0.98] select-none rounded-md"
             >
               Initialize compression
             </button>
@@ -84,7 +84,7 @@ Do not use generic advice. Always provide code-level optimizations. Avoid mentio
         {/* RIGHT: COMPRESSION_OUTPUT */}
         <section className="lg:col-span-6 flex flex-col bg-secondary/30">
           <div className="p-4 border-b border-border bg-secondary flex justify-between items-center h-12">
-            <span className="text-[10px] font-bold text-muted-foreground italic">Ltl compressed source</span>
+            <span className="text-xs font-bold text-muted-foreground italic">Ltl compressed source</span>
             {compResult && (
               <div className="text-[10px] font-bold text-green-600 bg-green-600/5 px-3 py-1 border border-green-600/10 rounded-sm">
                 Original: {compResult.originalTokens}tk → Ltl: {compResult.compressedTokens}tk → Saved: {compResult.savedPercent}%
@@ -116,7 +116,7 @@ Do not use generic advice. Always provide code-level optimizations. Avoid mentio
           {/* INSPECTOR PREVIEW (COLLAPSIBLE-STYLE BOTTOM BAR) */}
           {compResult && (
             <div className="h-48 border-t border-border bg-secondary flex flex-col overflow-hidden">
-               <div className="p-3 border-b border-border bg-black/5 text-[9px] font-bold text-muted-foreground px-6 py-2 uppercase tracking-tighter">State inspector preview</div>
+               <div className="p-3 border-b border-border bg-black/5 text-xs font-bold text-muted-foreground px-6 py-2 uppercase tracking-tighter">State inspector preview</div>
                <div className="flex-1 grid grid-cols-2 gap-0 overflow-hidden">
                   <div className="border-r border-border p-4 overflow-y-auto scrollbar-hide bg-background/50">
                     {Object.entries(previewAnalysis.variables).map(([k, v]) => (

@@ -324,7 +324,7 @@ COMPILER OUTPUT (LTL only, starting now):`
             <button
               onClick={handleCompress}
               disabled={isCompressing || !nlInput.trim()}
-              className={`w-full py-5 text-[12px] font-sans font-bold tracking-tight transition-all active:scale-[0.98] select-none rounded-md
+              className={`w-full py-5 text-sm font-sans font-bold tracking-tight transition-all active:scale-[0.98] select-none rounded-md
                 ${(isCompressing || !nlInput.trim()) 
                   ? 'bg-secondary text-muted-foreground cursor-not-allowed border border-border' 
                   : 'bg-black text-white hover:bg-black/90'}`}
@@ -381,7 +381,7 @@ COMPILER OUTPUT (LTL only, starting now):`
               <button
                 onClick={copyResult}
                 disabled={!ltlOutput || isCompressing}
-                className={`px-8 py-2.5 text-[11px] font-sans font-bold transition-all rounded-md border
+                className={`px-8 py-2.5 text-xs font-sans font-bold transition-all rounded-md border
                   ${(!ltlOutput || isCompressing)
                     ? 'bg-transparent text-muted-foreground border-border cursor-not-allowed'
                     : 'bg-black text-white border-black hover:bg-black/90'}`}

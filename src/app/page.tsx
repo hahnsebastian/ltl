@@ -19,10 +19,10 @@ export default function Home() {
 
       {/* Hero */}
       <main className="flex-1 flex flex-col items-center justify-center px-4 md:px-8 max-w-screen-sm mx-auto w-full text-center gap-8 py-24 md:py-36">
-        <h1 className="text-3xl md:text-5xl font-medium tracking-tight text-foreground leading-tight">
+        <h1 className="text-2xl md:text-5xl font-medium tracking-tight text-foreground leading-tight">
           Reduce AI prompts
         </h1>
-        <p className="text-base md:text-lg text-muted-foreground font-normal leading-relaxed">
+        <p className="text-lg md:text-lg text-muted-foreground font-normal leading-relaxed">
           LTL is a high-density semantic shorthand for LLMs. Map verbose English to dense symbolic operators and transmit full agent instructions in seconds.
         </p>
 
