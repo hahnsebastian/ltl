@@ -324,16 +324,16 @@ COMPILER OUTPUT (LTL only, starting now):`
             <button
               onClick={handleCompress}
               disabled={isCompressing || !nlInput.trim()}
-              className={`w-full py-5 text-[12px] font-sans font-bold transition-all active:scale-[0.98] select-none rounded-md
+              className={`w-full py-5 text-[12px] font-sans font-bold tracking-tight transition-all active:scale-[0.98] select-none rounded-md
                 ${(isCompressing || !nlInput.trim()) 
                   ? 'bg-secondary text-muted-foreground cursor-not-allowed border border-border' 
                   : 'bg-black text-white hover:bg-black/90'}`}
             >
               {isCompressing ? (
                 <span className="flex items-center justify-center gap-2">
-                  Working <span className="animate-pulse">_</span>
+                  WORKING <span className="animate-pulse">_</span>
                 </span>
-              ) : 'Compress'}
+              ) : 'COMPRESS'}
             </button>
           </div>
 
@@ -344,7 +344,7 @@ COMPILER OUTPUT (LTL only, starting now):`
                 <div className="space-y-2">
                   <h2 className="text-xl font-bold tracking-tight text-foreground">First time setup</h2>
                   <p className="text-muted-foreground text-[13px] leading-relaxed font-bold">
-                    Ltl downloads once to your browser (~2.3GB).<br />
+                    LTL downloads once to your browser (~2.3GB).<br />
                     After this, compression refinements load in seconds — offline, forever.
                   </p>
                 </div>
@@ -367,9 +367,9 @@ COMPILER OUTPUT (LTL only, starting now):`
         </section>
 
         {/* RIGHT COLUMN: OUTPUT */}
-        <section className="flex flex-col bg-secondary border border-border rounded-md relative overflow-hidden">
-          <div className="flex-1 relative group overflow-hidden">
-            <div className="absolute inset-0 p-8 overflow-y-auto whitespace-pre font-mono text-[14px] leading-[22px] text-foreground">
+        <section className="flex flex-col bg-secondary border border-border rounded-md relative overflow-hidden group">
+          <div className="flex-1 relative overflow-hidden">
+            <div className="absolute inset-0 p-8 overflow-y-auto whitespace-pre font-mono text-[14px] leading-[22px] text-foreground scrollbar-hide">
               {ltlOutput ? highlightLTL(ltlOutput) : (
                 <div className="text-muted-foreground/60 select-none font-normal text-sm">
                   Ready for compression...
@@ -377,16 +377,18 @@ COMPILER OUTPUT (LTL only, starting now):`
               )}
             </div>
 
-            {ltlOutput && !isCompressing && (
-              <div className="absolute bottom-8 right-8 flex flex-col items-end gap-6 transition-all">
-                <button
-                  onClick={copyResult}
-                  className="px-10 py-3 bg-black text-white text-[11px] font-sans font-bold border border-black hover:bg-black/90 transition-all rounded-md"
-                >
-                  {copied ? 'Copied' : 'COPY LTL'}
-                </button>
-              </div>
-            )}
+            <div className="absolute bottom-8 right-8 flex flex-col items-end gap-6 transition-all opacity-0 group-hover:opacity-100">
+              <button
+                onClick={copyResult}
+                disabled={!ltlOutput || isCompressing}
+                className={`px-8 py-2.5 text-[11px] font-sans font-bold transition-all rounded-md border
+                  ${(!ltlOutput || isCompressing)
+                    ? 'bg-transparent text-muted-foreground border-border cursor-not-allowed'
+                    : 'bg-black text-white border-black hover:bg-black/90'}`}
+              >
+                {copied ? 'COPIED' : 'COPY LTL'}
+              </button>
+            </div>
           </div>
         </section>
       </main>
