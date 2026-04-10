@@ -20,7 +20,7 @@ export default function TermsPage() {
           <h2>2. Use of Registry</h2>
           <p>
             The Atlas Registry is a community resource. While we strive for 100% uptime and 
-            pattern accuracy, the specification is provided "as is" without warranty of 
+            pattern accuracy, the specification is provided &quot;as is&quot; without warranty of 
             any kind.
           </p>
         </section>
