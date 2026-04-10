@@ -146,7 +146,7 @@ $tone = "professional" [professional|casual|technical]
 
             {/* Validation Panel */}
             <div className="bg-white border border-black rounded-lg p-4 space-y-3">
-              <h3 className="text-xs text-black font-bold px-1">Validation</h3>3>
+              <h3 className="text-xs text-black font-bold px-1">Validation</h3>
               <div className="space-y-2">
                 {validation?.errors.map((err, i) => (
                   <div key={i} className="p-3 bg-red-950/20 border border-red-900/30 rounded">
