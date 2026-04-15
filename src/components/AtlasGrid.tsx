@@ -170,7 +170,7 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
       {/* Simple Status */}
       <div className="h-6 flex justify-between items-center px-4 text-[7px] text-muted-foreground font-mono select-none bg-white border-t border-border">
         <div>Registry Alpha: {database.length} {'//'} All records active: {filteredData.length} {'//'} Latency: 0.1ms</div>
-        <div className="animate-pulse opacity-50">Data virtualization 500k stable</div>
+        <div className="animate-pulse opacity-50">Data virtualization 620+ stable</div>
       </div>
     </div>
   )
