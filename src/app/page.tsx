@@ -203,7 +203,7 @@ export default function Home() {
 
       {/* HUD: Hint */}
       <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 text-xs text-muted-foreground bg-white/90 backdrop-blur-md border border-border rounded-full px-4 py-1.5 z-50 transition-opacity duration-500 pointer-events-none ${(!showHint || drawMode) ? 'opacity-0' : 'opacity-100'}`}>
-        Click the pencil to reveal what's hidden ✦
+        Click the pencil to reveal what&apos;s hidden ✦
       </div>
 
       {/* HUD: Brush size controls */}
