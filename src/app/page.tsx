@@ -247,7 +247,7 @@ export default function Home() {
 
           <div className="flex flex-col border border-border rounded-xl overflow-hidden mb-12">
             {[ 
-              { num: '01', title: 'Load the core reference', desc: 'Load ltl-core.md once to register all 620+ sigil expansions.', code: 'curl ltl-beta.vercel.app/ltl-core.md' },
+              { num: '01', title: 'Load the core reference', desc: 'Load ltl-core.md once to register all 500k+ sigil expansions.', code: 'curl ltl-beta.vercel.app/ltl-core.md' },
               { num: '02', title: 'Write compressed prompts', desc: 'Replace verbose instructions with high-density sigil expressions.', code: '%React.Senior @component #ts #a11y >code+jsdoc' },
               { num: '03', title: 'Decode, execute, save', desc: 'The model reconstructs full intent locally. Up to 94%+ token savings.', code: 'TCR = 1 − (11 / 193) = 94.3% compression' }
             ].map((step, i) => (
@@ -346,22 +346,17 @@ export default function Home() {
             LTL ships with a full registry, formal research, and open-source tooling.
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3">
             {[ 
               {
                 icon: <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>,
                 title: 'Infinite Scrolling Atlas',
-                desc: 'Real-time searchable database of 620+ domain-specific patterns spanning React, API design, Database, DevOps, and general-purpose domains.'
+                desc: 'Real-time searchable database of 500k+ domain-specific patterns spanning React, API design, Database, DevOps, and general-purpose domains.'
               },
               {
                 icon: <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>,
                 title: 'Token Efficiency Tracking',
                 desc: 'Visual estimation of token savings per pattern. Average compression exceeds 94%, with some patterns achieving a 17× verbose expansion factor.'
-              },
-              {
-                icon: <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>,
-                title: 'Research White Paper',
-                desc: 'Formal derivation of TCR and ESCR, the four-stage algorithmic architecture, and concrete implications for cost and latency in production LLM systems.'
               },
               {
                 icon: <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 1 1-2.65-6.35"></path></svg>,

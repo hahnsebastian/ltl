@@ -28,7 +28,7 @@ export default function Home() {
               <div className="w-px bg-border" />
               <div className="flex flex-col items-end">
                 <span className="text-muted-foreground mb-1 group-hover:text-foreground transition-colors font-bold uppercase tracking-tight">Pattern Registry</span>
-                <span className="text-3xl font-bold text-foreground tracking-tighter">500,000</span>
+                <span className="text-3xl font-bold text-foreground tracking-tighter">500k</span>
               </div>
             </div>
           </div>

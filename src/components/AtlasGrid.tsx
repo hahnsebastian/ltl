@@ -71,7 +71,7 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
     return (
       <div className="flex flex-col items-center justify-center h-[600px] w-full text-foreground p-8 border border-border animate-pulse bg-white rounded-md">
         <span className="text-xl mb-2 tracking-tight">Syncing global core...</span>
-        <span className="text-xs tracking-tight">Synchronizing 500,000 patterns instant</span>
+        <span className="text-xs tracking-tight">Synchronizing 500k domain-specific patterns</span>
       </div>
     )
   }
@@ -170,7 +170,7 @@ export default function AtlasGrid({ searchQuery, activeCategory }: AtlasGridProp
       {/* Simple Status */}
       <div className="h-6 flex justify-between items-center px-4 text-[7px] text-muted-foreground font-mono select-none bg-white border-t border-border">
         <div>Registry Alpha: {database.length} {'//'} All records active: {filteredData.length} {'//'} Latency: 0.1ms</div>
-        <div className="animate-pulse opacity-50">Data virtualization 620+ stable</div>
+        <div className="animate-pulse opacity-50">Data virtualization 500k stable</div>
       </div>
     </div>
   )
