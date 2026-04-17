@@ -54,6 +54,9 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  verification: {
+    google: '4OJLqEY83RVVx9W9xDEABYZEdHggOrFi_rgHVl29xTg',
+  },
   icons: {
     icon: '/logo.png',
   },
