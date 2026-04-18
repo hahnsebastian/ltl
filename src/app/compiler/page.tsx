@@ -311,7 +311,7 @@ COMPILER OUTPUT (LTL only, starting now):`
       <main className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:h-[calc(100vh-160px)] h-auto pb-12 lg:pb-0">
         
         {/* LEFT COLUMN: INPUT */}
-        <section className="flex flex-col bg-white border border-border rounded-md relative overflow-hidden h-[400px] lg:h-full">
+        <section className="flex flex-col bg-white border border-border rounded-md relative overflow-hidden h-[600px] lg:h-full">
           <div className="flex-1 flex flex-col p-8 gap-8">
             <textarea
               value={nlInput}
@@ -392,7 +392,7 @@ COMPILER OUTPUT (LTL only, starting now):`
         </section>
 
         {/* RIGHT COLUMN: OUTPUT */}
-        <section className="flex flex-col bg-white border border-border rounded-md relative overflow-hidden group h-[400px] lg:h-full">
+        <section className="flex flex-col bg-white border border-border rounded-md relative overflow-hidden group h-[600px] lg:h-full">
           <div className="flex-1 relative overflow-hidden">
             <div className="absolute inset-0 p-8 overflow-y-auto whitespace-pre font-mono text-[14px] leading-[22px] text-foreground scrollbar-hide">
               {ltlOutput ? highlightLTL(ltlOutput) : (
