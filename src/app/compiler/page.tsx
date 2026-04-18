@@ -307,7 +307,7 @@ COMPILER OUTPUT (LTL only, starting now):`
   }
 
   return (
-    <div className="flex-1 bg-background text-foreground flex flex-col font-mono scrollbar-hide selection:bg-primary/10 p-4 md:p-8">
+    <div className="flex-1 bg-background text-foreground flex flex-col font-sans scrollbar-hide selection:bg-primary/10 p-4 md:p-8">
       <main className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:h-[calc(100vh-160px)] h-auto pb-12 lg:pb-0">
         
         {/* LEFT COLUMN: INPUT */}
@@ -317,7 +317,7 @@ COMPILER OUTPUT (LTL only, starting now):`
               value={nlInput}
               onChange={e => setNlInput(e.target.value)}
               placeholder="Paste any English prompt..."
-              className="flex-1 bg-transparent border-none outline-none resize-none text-[15px] leading-relaxed text-foreground focus:text-foreground transition-all caret-primary placeholder:text-muted-foreground font-medium"
+              className="flex-1 bg-transparent border-none outline-none resize-none text-[15px] leading-relaxed text-foreground focus:text-foreground transition-all caret-primary placeholder:text-muted-foreground font-mono font-medium"
               spellCheck={false}
               disabled={isCompressing}
             />
