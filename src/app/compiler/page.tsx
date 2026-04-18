@@ -21,6 +21,7 @@ export default function LTLCompilerPage() {
   
   const engineRef = useRef<any>(null)
   const [copied, setCopied] = useState(false)
+  const [hasConsented, setHasConsented] = useState(false)
 
   // Token counts
   const [stats, setStats] = useState({
@@ -49,7 +50,7 @@ export default function LTLCompilerPage() {
   const workerInstanceRef = useRef<Worker | null>(null)
 
   useEffect(() => {
-    if (webGPUAvailable === false || isInitializing.current || engineRef.current) return
+    if (webGPUAvailable === false || isInitializing.current || engineRef.current || !hasConsented) return
     isInitializing.current = true
 
     const initEngine = async () => {
@@ -102,7 +103,7 @@ export default function LTLCompilerPage() {
       engineRef.current = null
       isInitializing.current = false
     }
-  }, [webGPUAvailable])
+  }, [webGPUAvailable, hasConsented])
 
   const VALID_LINE = /^(\s*(\/\/|%|@|\$|!|#|>|>>|<<|~|\?|:|!!|\|)|^$)/
 
@@ -337,15 +338,39 @@ COMPILER OUTPUT (LTL only, starting now):`
             </button>
           </div>
 
+          {/* STATE 0: CONSENT TO DOWNLOAD */}
+          {!hasConsented && (
+            <div className="absolute inset-x-8 inset-y-12 bg-background border border-border z-50 flex flex-col p-12 justify-center rounded-md font-sans">
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <h2 className="text-xl font-bold tracking-tight text-foreground">AI Refinement (Beta)</h2>
+                  <p className="text-muted-foreground text-[13px] leading-relaxed font-bold">
+                    To enable high-fidelity AI refinement, LTL needs to download a 2.3GB Phi-3.5 model to your browser&apos;s local storage.<br /><br />
+                    This happens once. After download, all compression stays 100% private and offline.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setHasConsented(true)}
+                  className="w-full py-4 bg-black text-white text-xs font-bold rounded-md hover:bg-black/90 transition-all active:scale-[0.98]"
+                >
+                  DOWNLOAD & ACTIVATE AI (2.3GB)
+                </button>
+                <p className="text-[10px] text-center text-muted-foreground italic">
+                  * Requires WebGPU support. Data is stored in your browser cache.
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* STATE 1 OVERLAY: FIRST TIME SETUP */}
-          {appState === 1 && (
+          {appState === 1 && hasConsented && (
             <div className="absolute inset-x-8 inset-y-12 bg-background border border-border z-50 flex flex-col p-12 justify-center rounded-md font-sans">
               <div className="space-y-8">
                 <div className="space-y-2">
-                  <h2 className="text-xl font-bold tracking-tight text-foreground">First time setup</h2>
+                  <h2 className="text-xl font-bold tracking-tight text-foreground">Downloading Model...</h2>
                   <p className="text-muted-foreground text-[13px] leading-relaxed font-bold">
-                    LTL downloads once to your browser (~2.3GB).<br />
-                    After this, compression refinements load in seconds — offline, forever.
+                    LTL is fetching the weights. Please don&apos;t close this tab.<br />
+                    Offline compression will be available shortly.
                   </p>
                 </div>
 

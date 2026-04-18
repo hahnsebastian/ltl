@@ -69,7 +69,7 @@ export default function Navbar() {
                 target={isExternal ? '_blank' : undefined}
                 rel={isExternal ? 'noopener noreferrer' : undefined}
                 onClick={() => setMenuOpen(false)}
-                className="block px-8 py-6 text-lg hover:bg-secondary transition-all font-bold text-foreground border-b border-border/50 last:border-none"
+                className="block px-8 py-4 text-sm hover:bg-secondary transition-all font-medium text-foreground border-b border-border/50 last:border-none"
               >
                 {link.label}
               </Link>
