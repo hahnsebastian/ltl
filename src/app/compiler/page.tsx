@@ -355,9 +355,7 @@ COMPILER OUTPUT (LTL only, starting now):`
                 >
                   DOWNLOAD & ACTIVATE AI (2.3GB)
                 </button>
-                <p className="text-[10px] text-center text-muted-foreground italic">
-                  * Requires WebGPU support. Data is stored in your browser cache.
-                </p>
+
               </div>
             </div>
           )}
