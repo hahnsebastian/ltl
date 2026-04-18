@@ -160,7 +160,7 @@ export default function Home() {
         <main className="relative z-20 flex flex-col items-center justify-center px-4 md:px-8 max-w-[680px] mx-auto w-full text-center py-12 md:py-36 pointer-events-none">
           <div className={`my-12 md:my-[120px] flex flex-col items-center gap-6 md:gap-8 p-5 sm:p-8 md:p-12 rounded-[14px] sm:rounded-[20px] transition-all duration-700 w-full xl:w-[120%] ${(hasDrawn || drawMode) ? 'bg-background border border-border shadow-sm' : 'bg-transparent'}`}>
             <h1 className="text-3xl md:text-5xl font-medium tracking-tight text-foreground leading-tight" style={{ textShadow: (hasDrawn || drawMode) ? "none" : "0 0 40px rgba(255,255,255,0.8)" }}>
-              LTL: Less-Token-Language Registry
+              LTL: Less-Token-Language
             </h1>
             <p className="text-[16px] md:text-lg text-muted-foreground font-normal leading-relaxed" style={{ textShadow: (hasDrawn || drawMode) ? "none" : "0 0 20px rgba(255,255,255,0.9)" }}>
               LTL is a high-density semantic shorthand for LLMs. Map verbose English to dense symbolic operators and transmit full agent instructions in seconds.
