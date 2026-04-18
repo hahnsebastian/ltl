@@ -163,7 +163,7 @@ export default function Home() {
               LTL: Less-Token-Language
             </h1>
             <p className="text-[16px] md:text-lg text-muted-foreground font-normal leading-relaxed" style={{ textShadow: (hasDrawn || drawMode) ? "none" : "0 0 20px rgba(255,255,255,0.9)" }}>
-              LTL is a high-density semantic shorthand for LLMs. Map verbose English to dense symbolic operators and transmit full agent instructions in seconds.
+              A compressed shorthand language for prompts that replaces long instructions with tiny symbolic codes, saving tokens, cost, and time.
             </p>
 
             <div className="w-full flex flex-col items-center gap-3 pointer-events-auto mt-2 md:mt-0">
