@@ -343,15 +343,15 @@ COMPILER OUTPUT (LTL only, starting now):`
             <div className="absolute inset-x-8 inset-y-12 bg-background border border-border z-50 flex flex-col p-12 justify-center rounded-md font-sans">
               <div className="space-y-6">
                 <div className="space-y-3">
-                  <h2 className="text-xl font-bold tracking-tight text-foreground">AI Refinement (Alpha)</h2>
-                  <p className="text-muted-foreground text-[13px] leading-relaxed font-bold">
+                  <h2 className="text-xl font-medium tracking-tight text-foreground">AI Refinement (Alpha)</h2>
+                  <p className="text-muted-foreground text-[13px] leading-relaxed font-normal">
                     To enable high-fidelity AI refinement, LTL needs to download a 2.3GB Phi-3.5 model to your browser&apos;s local storage.
                   </p>
                 </div>
                 <div className="flex flex-col gap-3 text-center">
                   <button
                     onClick={() => setHasConsented(true)}
-                    className="w-full py-4 bg-black text-white text-xs font-bold rounded-md hover:bg-black/90 transition-all active:scale-[0.98]"
+                    className="w-full py-4 bg-black text-white text-xs font-medium rounded-md hover:bg-black/90 transition-all active:scale-[0.98]"
                   >
                     DOWNLOAD & ACTIVATE AI (2.3GB)
                   </button>
