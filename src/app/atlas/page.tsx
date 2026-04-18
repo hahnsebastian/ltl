@@ -22,13 +22,13 @@ export default function Home() {
 
             <div className="flex gap-10 font-sans text-xs bg-white p-6 border border-border rounded-md backdrop-blur-sm group hover:border-foreground transition-all">
               <div className="flex flex-col items-end">
-                <span className="text-muted-foreground mb-1 group-hover:text-foreground transition-colors font-bold uppercase tracking-tight">Compression Ratio</span>
-                <span className="text-3xl font-bold text-foreground tracking-tighter">96.8%</span>
+                <span className="text-muted-foreground mb-1 group-hover:text-foreground transition-colors font-medium uppercase tracking-tight">Compression Ratio</span>
+                <span className="text-3xl font-medium text-foreground tracking-tighter">96.8%</span>
               </div>
               <div className="w-px bg-border" />
               <div className="flex flex-col items-end">
-                <span className="text-muted-foreground mb-1 group-hover:text-foreground transition-colors font-bold uppercase tracking-tight">Pattern Registry</span>
-                <span className="text-3xl font-bold text-foreground tracking-tighter">500k</span>
+                <span className="text-muted-foreground mb-1 group-hover:text-foreground transition-colors font-medium uppercase tracking-tight">Pattern Registry</span>
+                <span className="text-3xl font-medium text-foreground tracking-tighter">500k</span>
               </div>
             </div>
           </div>
