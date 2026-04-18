@@ -248,7 +248,7 @@ export default function Home() {
 
           <div className="flex flex-col border border-border rounded-xl overflow-hidden mb-12">
             {[ 
-              { num: '01', title: 'Load the core reference', desc: 'Load ltl-core.md once to register all 500k+ sigil expansions.', code: 'curl ltl-beta.vercel.app/ltl-core.md' },
+              { num: '01', title: 'Load the core reference', desc: 'Load ltl-core.md once to register all 500k+ sigil expansions.', code: 'curl https://ltl-atlas.vercel.app/ltl-core.md' },
               { num: '02', title: 'Write compressed prompts', desc: 'Replace verbose instructions with high-density sigil expressions.', code: '%React.Senior @component #ts #a11y >code+jsdoc' },
               { num: '03', title: 'Decode, execute, save', desc: 'The model reconstructs full intent locally. Up to 94%+ token savings.', code: 'TCR = 1 − (11 / 193) = 94.3% compression' }
             ].map((step, i) => (
